@@ -1,0 +1,229 @@
+46. Flex 아이템크기#1 Flex Direction / Basis
+flex box의 속성들을 알아보면서 활용해보자.
+flex박스를 만드는 방법은 쉽다.
+item들을 더큰 블록으로 감싸고 이 박스를 display: flex해주면 된다.
+사진참조
+inline-flex와 그냥 flex의 차이점이 무엇인가?
+안에 들어잇는것이 inline태그들이냐 block태그들이냐에 따라 차이 나는 것이다.
+개념상으로는 그렇지만 사용방법은 같다.
+<section class="s1">
+        <h1>flex box</h1>
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+        </ul>
+
+    </section>
+--------------
+.s1 ul{
+    display: flex;
+    background: gray;
+}
+
+.s1 li:nth-child(1){
+    background: red;
+}
+
+.s1 li:nth-child(2){
+    background: green;
+}
+
+.s1 li:nth-child(3){
+    background: blue;
+}
+
+.s1 li:nth-child(4){
+    background: yellow;
+}
+.s1 li:nth-child(5){
+    background: lightblue;
+}
+목록을 만들고 각 영역을 구분하기 위해 일단 색을 넣어줘고 flexbox에 담앗다.
+기존에 이 오른쪽으로 나열하는 방법은 없었지만 새로 생긴 것이다. 과거에는 불가능했다.
+flex-direction: column;하면 기존 박스처럼 보여진다.
+flex-direction: row-reverse;하면 오른쪽에 역순으로 쌓인다.
+
+중요한 것은 이 안쪽의 아이템들의 크기를 정리하는게 필요하다.
+flexbox의 크기는 그것을 담는 컨텐트의 크기만큼이다.
+.s1 li:nth-child(1){
+    background: red;
+    width: 100px;
+}
+특정아이템의 크기를 지정하면된다. 그런데 이렇게 하지 않을 것이다.
+너비라는 것은 x축으로의 크기인데 direction에따라서 달라지기 때문이다.
+수평방향일때 수직방향의 축방향에 따라 크기를 정하고 싶다.?
+flex-basis: 100px; 해주면된다.
+방향성과 관계없이 크기를 지정하고 싶다면 width / height를 사용하면 된다.
+
+47. Flex 아이템크기#2 flex-grow
+아이템들의 크기를 다 적용하고 싶다면 어떻게 해야할까?
+.s1 li{
+    flex-basis: 100px;;
+    flex-grow: 1;
+}
+그런데 나머지영역이 남으면 화면을 차지하고 있다.
+flex-grow : 아무숫자; 를주면 된다.
+이 것의 뜻이 무엇인가? 아이템이 자기의 공간을 차지하고 남은 부모의 영역을 나눠가질 수 있다.
+숫자가 1이면 1대1대1이런식으로 나눠가진다는 뜻이다.
+grow하지 않겠다하면 나눠갔겟다고 선언한 녀석들만 나눠가지게 된다.
+사진참조
+그런데 만약 한녀석에만 flex-grow:3;이면 어떻게 나눠가지나?
+남들보다 3배의공간을 가져야하니 칸을 더 나눈 후에 배분을 하게 된다.
+각각 부여받은 여백의 크기보다 3배를 가지는 것임.
+사진참조
+이 grow설정은 item에 설정하는 스타일이다.
+flex는 item에 설정하는 것이 잇고 컨테이너에 설정하는 것들이 있다. 아이템크기 여백 등은 아이템에 설정한다.
+만약 여백을 가지는 애가 없다면 혼자 다 가지게 된다.
+이 grow를 잘 설정하면 나머지는 다 고정되고 여백은 한녀석이 다차지하는 그런 모습으로 만들 수도 있는 것이다.
+이것을 잘 이용하면 원하는 크기를 설정할 수 있게 된다. 나머지는 고정되고 하나가 확장되는 형태면 특정한 녀석에만 넣으면 된다.
+
+48. flex 아이템크기 #3  flex-shrink
+flex-shrink는 flex-grow와 반대되는 녀석이다.
+빈공백과 관련이있다. 공간이 줄어든다면? 
+flex-basis: 100px일때 줄어들면? 일단 여백이 없어지고 크기가 100px이 안된다.
+flex-shrink는 아이템의 크기가 정해졌는데 그 크기보다 작아질 수 있느냐 라는 속성이다.
+flex-shrink:0을 하면 영역밖으로 벗어난 item이다. 기본적으로는 flex-shrink:1이다.
+만약에 하나만 정의해두면 다른애들은 줄어드는데 다른애들은 크기가 그대로이게 될 것이다.
+
+크기와 관련된 3개의 속성
+basis : 컨텐트 크기 / grow : 0 / shrink : 1이 기본값이다. 이것을 알고 잘 활용해라
+
+49. Shorthand for (flex-grow/flex-shrink/flex-basis) 단축 속성과 값
+이 세가지 속성을 자주 사용하기 때문에 축약설정들이 있다.
+선택적으로 사용해도 되지만 줄여서 사용할 수있다.
+flex-grow:1; flex-shrink 1; flex-basis 100px;라고 나눠 작성했을 때
+flex: 1 1 100px; flex: grow shrink basis
+다른 속성들은 순서가 중요하지 않은데 이녀석은 중요하니 잘 알고 사용하자.
+flex: none; / 0 0 auto;
+flex: auto; / 1 1 auto;
+flex: initial; / 0 1 auto;
+flex: 100px; /1 1 100px;
+이 값마저도 줄일 수 있다. 값마저도 축약형으로 쓰겟다하면 이것을 사용하면된다.
+이걸 알아두고 맨날 까먹는데 사용하려면 레퍼런스를 찾아가서 보러가면된다.
+
+50. flex-lines(direction,wrap,flow)
+direction으로 방향설정을 햇다.
+50.1 flex:wrap | wrap | wrap-reverse
+wrap을 사용하면 아이템이 쭉가다가 벽을 만나면 내려쓰기를 하도록 할 수 있다.
+때로는 nowrap을 하면 넘어가지 않고 오른쪽으로 쭉 펼처진다.
+direction이 컬럼일경우 wrap이 먹지 않는다 계속해서 내려갈 수있기때문임.
+그런데 만약 부모 컨테이너가 크기를 가졌다면? 
+flex-flow:column wrap; 부모가 height: 200px;이고 item이 flex-basis: 100px;인경우
+너비를 n/2등분하고 가지게 된다. 
+사진참조1
+만약 여백이 잇을때 grow를 1로 해주면 각자 알아서 나눠가지고 마지막 녀석이 남은 여백을 다 가지게된다.
+flex-flow는 direction과 wrap을 한번에 나타나게 해주는 축약이다.
+컨테이너에서 설정해야한다.
+
+.s1 ul{
+    display: flex;
+    background: gray;
+    flex-flow: column wrap;
+    height: 250px;
+}
+.s1 li{
+    flex: 0 0 100px;
+    flex-grow: 1;
+
+}
+.s1 li:nth-child(1){
+    background: red;
+}
+.s1 li:nth-child(2){
+    background: green;
+}
+.s1 li:nth-child(3){
+    background: blue;
+}
+.s1 li:nth-child(4){
+    background: yellow;
+}
+.s1 li:nth-child(5){
+    background: lightblue;
+    flex-grow: 1;
+}
+사진참조2
+이 래핑은 정렬과 큰 관계가 있다.
+
+51. Ordering(order)
+아이템들의순서를 바꿀 수 있다.
+기본값은 0이라 태그를 배치한 순서가 된다.
+order : integer
+값을 -1을 주면? 맨앞으로 가게 된다. 순서를 잘 정리할 수 있다면 위치를 지정함으로써 이득을 볼수 잇다.
+.s1 li:nth-child(4){
+    background: yellow;
+    order : -1;
+}
+4번이 맨 앞에 나오게됨
+
+52. Box Alignment #1 : justify-content
+박스 정렬
+justify-content은 main쪽으로 정렬하고 싶을때 사용하는 것이다.
+시작위치냐 끝위치냐 에 따라서 정렬하는 것이다. 그리고 여백을 얼만큼 나눠가질 것인지 등이다.
+space-around는 아이템개수 *2로 여백을 나누고 좌우에 감사게 만든다.
+수직방향에서는 여백이없으므로 컨테이너에 높이를 설정해야만 한다.
+정렬이라는 것은 여백이 있어야 가능하다. 이 여백을 중간에 꽃아넣으려면?
+justify-content: center;하면 중앙으로 justify-content: start;시작지점 기준으로 정렬이다.
+justify-content: space-between; 하면 사이에 여백을 넣는다. space-around은 좌우로 여백을 넣는다.
+justify-content: space-evenly;은 양쪽끝에 여백을 넣어준다.
+메인축 정렬은 이걸 사용하면된다.
+수직일때는 여백이 없다면 나눠가질 수없다.
+.s1 ul{
+    display: flex;
+    background: gray;
+    flex-direction: column; 
+    justify-content: space-evenly;
+    height: 300px;
+}
+
+53. align-items/align-content/align-self
+수직축 정렬이다.
+53.1 align-items
+align-items은 박스안의 컨텐트의 베이스라인을 기반으로 정리할 수 있는 것도 있다.
+사진참조
+그런데 만약 혼자서만 따로 정렬을 하고 싶다?
+align-self하면된다.
+align-items:stretch; 하면 부모의 여백만큼 정렬이 된다.
+.s1 ul{
+    display: flex;
+    background: gray;
+    height: 300px;
+    align-items:center;
+
+}
+.s1 li{
+    flex-basis: 100px;
+
+}
+
+.s1 li:nth-child(1){
+    background: red;
+    align-self: flex-start;
+
+}
+
+.s1 li:nth-child(2){
+    background: green;
+    align-self: flex-end;
+
+}
+이러면 각각 위치를 저장할수도잇다.
+align-items:baseline;하면 박스와 관련된게아니라 글자의 밑줄을 맞추는 것임. 폰트의 크기에 맞춘다.
+
+53.2 align-content
+사진참조
+align-content는 기존의 items를 사용할때와 달리 패킹을 한다.
+flex에는 line이 있는데 이것을 이해해야한다.
+flex라인들을 하나로 묶어서 정렬한다. 층을 무시하고 하나로 패킹한 후 넣는다.
+align-items는 각 층마다 여백을 가지고 있어서 space를 할 수가 없엇다.
+align-content 자기들 공백은 줫으니 여백을 사용할 수 있다.
+https://youtu.be/xZ0nod6omis
+
+
+
+
+
+

@@ -1,29 +1,37 @@
 @import url(css/reset.css);
+.s1 ul{
+    display: flex;
+    background: gray;
+    height: 300px;
+    /* align-items:baseline; */
+    align-content: center;
+    flex-wrap: wrap;
+}
+.s1 li{
+    flex-basis: 100px;
+    flex-shrink: 0;
 
-#header{
-    height: 70px;
-    background: beige;
-    position: sticky;
-    top: 0px;
 }
 
-#s1 ul {
-    background: yellow ;
-   
-}
-
-#s1 li:nth-child(1){
+.s1 li:nth-child(1){
     background: red;
-    
-
-  
+    /* align-self: flex-start; */
 }
 
-#s1 li:nth-child(2){
+.s1 li:nth-child(2){
     background: green;
-  
+    /* align-self: flex-end; */
+
 }
 
-#s1 li:nth-child(3){
+.s1 li:nth-child(3){
     background: blue;
+}
+
+.s1 li:nth-child(4){
+    background: yellow;
+
+}
+.s1 li:nth-child(5){
+    background: lightblue;
 }
