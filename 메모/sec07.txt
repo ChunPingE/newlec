@@ -1,0 +1,376 @@
+18. window 플랫폼을 이용한 대화 parseInt, alert,
+자바스크립트 언어가 이용할 수있는 재료 일명 플랫폼을 알아복려고 한다.
+일단 브라우저가 제공하는 플랫폼 Document를 알아보고자 한다.
+HTML5가 되면서 API가 많이 생겨낫다. 멀티미디어 네트워크 통신 로컬 저장소 등
+그전부터 있던 것들이 UI(동적 문서)이다.
+자바 스크립트가 이 브라우저 껍데기, 틀을 이용하고 싶다. 창닫기 브라우저 크기 줄이기 등
+이것을 이해 존재하는 객체가 window이다. 주소입력을 원래 사용자가 직접 입력하지만 자바스크립트로 조종할 수도 있다.
+
+window.location이 검색창을 조작하는 것이다.
+window.history 뒤로가기 앞으로가기 등
+window.document main페이지 컨텐츠 내용 이미지 스타일 등 바꿀수 있다. 
+->여기에는 다양한 element들이 있다(html의 element와 같음)
+
+window객체의 Mebers : 사용자와 상호작용을 위한 기본도구
+사진참조
+사용자와 상호작용 하는 대화창 alert(), confirm(), prompt()
+지금까지 alert()으로 사용했는데 window.alert()에서 window는 생략 가능하다.
+18.1 prompt()
+prompt()는 사용자로부터 값을 입력받는 창이다.
+사진참조
+->입력받는 것이 무조건 정수열로 들어감. 숫자로 바꾸고싶다면 어떻게 해야하나?
+여기선 언어의 개념이니 자바스크립트가서 보자
+parseInt()를 사용하면된다.
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt
+
+parseInt가 하는 가장 중요한 역할이있다. parseInt("abc"), // return NaN 리턴값이 숫자가 아니다라고 알려준다.
+이게 뭐가 중요한가?
+박스의 높이 너비 등이 문자열로 온다 CSS등을 얻어올때 뒤엣것을 빼내고 parseInt해야한다. 그런데 parseInt가 그런 기능을 해준다.
+문자열을 자동으로 탈락시켜준다.
+parseInt("12abc"); // return 12
+
+var x = prompt("x의 값",0);
+var y = prompt("x의 값",0);
+
+x = parseInt(x);
+y = parseInt(y);
+alert(x+y);
+
+18.2 confirm
+확인을 위한 대화상자
+무언가를 삭제할대 yes or no를 전달할 수 있다.
+var answer = confirm("정말로 삭제하실 생각입니까?"); 확인과 취소가있다.
+if(answer){
+    alert("삭제되었습니다.");
+}
+참또는 거짓을 주니가 if문과 연계할 수있다.
+
+19. 이벤트 기반의 윈도우 프로그래밍
+지금까지 script영역안에서만 작성햇엇다.
+html에는 태그안에 onXXX 이벤트 태그를 작성할수있는데 여기에도 넣을 수 있다.
+<input onclick=""/>
+<input onmouseover=""/> 마우스 올라갓을때 발생
+페이지가 읽혀질때 실행해야하면 script안에 작성하고 이벤트가 발생할때 해야하면 그 안에 작성한다.
+
+<input type="button" value="클릭" onclick="alert('안녕하세요!')" /><br/>
+<span onclick="alert('hello')">스팬입니다.</span>
+
+전에 햇던예제들 을 발생시키고 싶다.? script영역을 적절히하면됨. 함수로 만들어 놓고 나중에 함수호출하면된다.
+
+<script>
+    function printResutl(){
+        var x = prompt("x의 값",0);
+        var y = prompt("x의 값",0);
+
+        x = parseInt(x);
+        y = parseInt(y);
+        alert(x+y);
+    }
+</script>
+<input type="button" value="클릭" onclick="printResutl()" /><br/>
+프로그램이 막실행되는게 아니라 사용자가 선택하도록 해줄 수 있다.
+이게 기본적으로 윈도우 프로그램을 가지고 있는 사용자 환경이다. 자바스크립트는 이런 윈도우 프로그램을 만드는걸 정의한것이라고 할 수있다.
+
+20. 문서의 element 객체 이용하기
+HTML객체들이 보여질때 인터페이스이 윈도우 형태로 보여진다. 
+그런데 이녀석들이 브라우저로 갈때 태그들이 element객체들이 메모리상에 올라가서 자바스크립트가 중간에 손댈 수 있다.
+
+모든 노드들은 document아래에 꼬리에 꼬리로 되있다. document로부터 내려가거나 이름을 부여하고 그냥 직접할수도잇다.
+즉 id속성을 사용할 수 있다.
+<script>
+    function printResutl(){
+        var x = prompt("x의 값",0);
+        var y = prompt("x의 값",0);
+
+        x = parseInt(x);
+        y = parseInt(y);
+        // alert(x+y);
+        btnPrint.value = x+y;
+    }
+    
+</script>
+<input type="button" value="클릭" onclick="printResutl()" id="btnPrint"/><br/>
+이름이 btnPrint인 것의 value를 x+y로 바꾼다는 것이다.
+그럼span의 컨텐트를 바꿔보자. 얘는 밸류가 아니라 안의 text노드이다.
+<span id="span1" onclick="printResutl()">스팬입니다.</span>
+span1.innerText = x+y;
+
+이름을 부여해서 그 녀석의 속성을 바꿀수가 있다.
+
+객체 생성과 사용시점의 문제
+그런데 onclick도 설정이니 id를 이용해서 onclick을 함수에 작성하면? 코드유지보수에 더 쉬워진다.
+script내에서 함수를 대입할때는 함수객체를 넣어야해서 ()을빼ㅑ주자 ()하면 호출임.
+<script>
+    function printResutl(){
+        var x = prompt("x의 값",0);
+        var y = prompt("x의 값",0);
+
+        x = parseInt(x);
+        y = parseInt(y);
+    }
+    btnPrint.onclick= printResutl;
+</script>
+<input type="button" value="클릭" id="btnPrint"/><br/>
+이렇게 나누면 뷰단의 html은 HTML대로 관리하고 script는 script대로 관리하기 편해진다.
+근데 이러면 에러가 발생한다. -> 순서의 문제이다.
+함수안에 잇어서 실행이안되서 문제 없이 넘어갈 수 있는데 
+페이지열때 ptnPrint를 찾아서 객체를 만드는데 script가 먼저나오면 버튼객체가 없으니 찾지못해 에러가 나는것임.
+
+21.  코드 초기화와 엘리먼트 객체 선택하기
+두가지 방법이 있엇는데 
+1.script를 나중에 나오도록한다.
+2.모든 element는 body안에 있는 것들이 load가 되면 onload됫다고 한다.
+안쪽객체를 쓰면 body의 load이벤트를 쓰면된다. 우리는 window의 load객체를 쓸거임.
+문서외의 자원들(이미지등)이 load가 안될 수 가 있기 때문임
+그래서 문서가 실행되기 전까지 실행되지 않도록 함수로 감싸준다. 그리고 윈도우가 로드 된다음에 함수 호출되도록한다.
+function init(){
+    btnPrint.onclick= printResutl;
+}
+window.onload = init;
+이게 완성형은 아님.
+22. 객체 아이디 명명방법의 문제
+html에서는 카멜 표기법을 사용하지 않고 -로 한다. 그런데 -를 사용하면 자바스크립트에서 오류가 발생한다.
+그래서 일반적으로 과거에는 카멜 스타일을쓰고 가져다썻는데 올바른 방법은 html은 html 자스에선 자스대로 쓰는게 맞다.
+document에 담아주면된다. document는 커다란 보따리라고 생각하면된다. 이름을 명명한것잇으니 이것을 달라라고 할 수 있다.
+
+var btnPrint = document.getElementById("btn-print"); 담아달라고 무조건 넣어주자.
+이렇게 쓰는게 정석임. 지금까진 꼼수로 한것임. 
+근데 둘다 사용하니 불편하다. 전역으로 사용해도되나? 바람직한 방법이 아니다. 남이 만든거를 가져다 쓰면? 충돌날 수 있음.
+
+22. 스크립트 코드의 지역화
+아무리 그래도 다 넣는건 코드가 중복되서 비효율적이다.
+사실 이벤트 함수들은 명명할 이유가 없는 함수이다. 딱 한번밖에 안쓰이기때문임 
+1.그래서 직접 집어넣기가 있다.
+2.버튼을 document얻는데 하나만 쓰고싶다.
+이걸 어떻게 구조화할까? 익명함수라고 한다.
+window.onload =  function(){
+    var btnPrint = document.getElementById("btn-print");
+        btnPrint.onclick =  function() {
+        //var btnPrint = document.getElementById("btn-print");
+        var x = prompt("x의 값",0);
+        var y = prompt("x의 값",0);
+
+        x = parseInt(x);
+        y = parseInt(y);
+        btnPrint.value = x+y;
+        //span1.innerText = x+y;
+    };
+};
+이런식으로 이벤트이니 안쪽으로 넣고 지역화 할 수 있게 된다. 이 구조를 잘 사용해보자.
+앞으로 window.onload =  function(){}하고 채워넣을 것임.
+
+23.  코드분리와 이벤트 바인딩 방법 두 가지
+자바스크립트 코드가 html코드안에 잇엇는데 이것을 분리하고 싶다.
+이렇게 할경우 분업화하면 문제가 생긴다. 한페이지에 있으면 손보려면 기다려야한다. 매우 비효율적임.
+view와 controller를 물리적으로 나누는 것이다. 단점은 혼자일경우나 재생할 필요가 없을 경우 더 불편해짐 이럴땐 혼자 만들어라.
+확장자를 js로 파일을 만들어서 분리하자. 한쪽에서는 스크립트만 한쪽에서는 코드를 작성하는 것이다.
+<script src="index.js"></script> css연결하듯이 소스파일을 연결해주면된다.
+단일태그가 안된다.
+<script src="index.js"></script>
+<script src="test.js"></script>
+여러개의 script를 포함시킬수있고 위에가 먼저 실행되고 순서대로 실행된다
+안녕하세요는 되는데 클릭은 안된다.
+둘다 window.onload라서 뒤에 실행한게 앞에거를 대체 해버리는 것임. 그래서 앞에서 한게 없어지는 것과 마찬가지임.
+그래서 초기화되지않음 어떻게 해야할까? 그래서 이때 사용하는 방법은 이벤트를 누적하면된다.
+window.onload = function(){
+ alert("안녕하세요~");
+};
+window.onload = function(){alert("test1");}
+window.onload = function(){alert("test2");}
+window.onload = function(){alert("test3");}
+이렇게 대입하는게 아니라
+-> window.addEveintLisnter("load",finction{alert("test1")}); 이런식으로 해주면된다.
+add 이벤트 리스너 자바, 자스에서 이벤트 처리 함수 이 함수가 이벤트리스너가 되는 것임
+누적되게 함으로써 다 누적되게 해준다.
+window.addEventListener("load", function(){
+    var btnPrint = document.getElementById("btn-print");
+        btnPrint.onclick =  function() {
+        //var btnPrint = document.getElementById("btn-print");
+        var x = prompt("x의 값",0);
+        var y = prompt("x의 값",0);
+
+        x = parseInt(x);
+        y = parseInt(y);
+        btnPrint.value = x+y;
+        //span1.innerText = x+y;
+    };
+});
+함수안에 함수가 들어가는 것이니 });을 잘닫아주자. 자바익명구현객체 넣는 것과 비슷함.!!
+window.addEveintLisnter("load",function(){함수 내용});
+
+24. 첫 예제 간단한 계산기 프로그램 만들기
+<section>
+    <h1>Ex1 :계산기프로그램</h1>
+    <div>
+        <input id="txt-x" type="text" value="0" dir="rtl"/>
+        +
+        <input id="txt-y" type="text" value="0" dir="rtl"/>
+        <input id="btn-add" type="button" value="=">
+        <input id="txt-sum" type="text" value="0" dir="rtl" readonly/>
+    </div>
+</section>
+하나씩 추가하려고 section으로 나눔.
+window.addEventListener("load", function() {
+    var txtX = document.getElementById("txt-x");
+    var txtY = document.getElementById("txt-y");
+    var btnAdd = document.getElementById("btn-add");
+    var txtSum = document.getElementById("txt-sum");
+
+    btnAdd.onclick = function(){
+        var x = parseInt(txtX.value);
+        var y = parseInt(txtY.value);
+
+        txtSum.value = x+y;
+    }
+});
+
+25. 노드 선택 방법 개선하기
+각각다 id를 부여해서 선택했는데 모든것들에 id를 부여하는 것은 비효율적임.
+section 에 id를 부여하고 선택자로 아래애들을 선택하는게 좋다.
+.getElementsByTagName(); 태그이름을 기준으로 배열을 뽑음
+.getElementsByClassName(); 클래스이름 기준으로 배열을 뽑음
+목록을 얻고 lis[0]인덱스로 접근 가능함.
+innerText는 ms것임 웹표준이 아님 / textContent도 같은 의미임.
+<section id="section2">
+    <h1>Ex2 : 엘리먼트 선택방법 개선하기</h1>
+    <div>
+        <input type="text" value="0" dir="rtl"/>
+        +
+        <input type="text" value="0" dir="rtl"/>
+        <input type="button" value="=">
+        <input type="text" value="0" dir="rtl" readonly/>
+    </div>
+</section>
+---
+window.addEventListener("load", function() {
+    var section2 = document.getElementById("section2");
+    var inputs = section2.getElementsByTagName("input");
+
+    var txtX = inputs[0];
+    var txtY = inputs[1];
+    var btnAdd = inputs[2];
+    var txtSum = inputs[3];
+    
+    btnAdd.onclick = function(){
+        var x = parseInt(txtX.value);
+        var y = parseInt(txtY.value);
+
+        txtSum.value = x+y;
+    }
+});
+그런데 태그명으로 검색하는 것은 좋지 않다. 순서가 바뀌면? 다 바꿔야함. 또한 귀찮아짐.
+<section id="section2">
+    <h1>Ex2 : 엘리먼트 선택방법 개선하기</h1>
+    <div>
+        <input class="txt-x" type="text" value="0" dir="rtl"/>
+        +
+        <input class="txt-y" type="text" value="0" dir="rtl"/>
+        <input class="btn-add" type="button" value="=">
+        <input class="txt-sum" type="text" value="0" dir="rtl" readonly/>
+    </div>
+</section>
+<hr/>
+
+window.addEventListener("load", function() {
+    var section2 = document.getElementById("section2");
+    var txtX = section2.getElementsByClassName("txt-x")[0];
+    var txtY = section2.getElementsByClassName("txt-y")[0];
+    var btnAdd = section2.getElementsByClassName("btn-add")[0];
+    var txtSum  = section2.getElementsByClassName("txt-sum")[0];
+    
+    btnAdd.onclick = function(){
+        var x = parseInt(txtX.value);
+        var y = parseInt(txtY.value);
+        txtSum.value = x+y;
+    }
+});
+배열이니 var txtX = section2.getElementsByClassName("txt-x")[0];인덱스도 넣어주자.
+jquery에서 css selector가잇는데 html5에 Selectors API가 등장해서 이걸 많이 쓴다.
+
+26. Selectors API
+모든 element에서 이것을 사용할 수 있다.
+querySelecotor과 querySelecotorAll만 기억하면 된다.
+전자는 단 하나만 후자는 여러개 가져올 경우.
+window.addEventListener("load", function() {
+    var section3 = document.getElementById("section3");
+    var txtX = section3.querySelector(".txt-x");
+    var txtY = section3.querySelector(".txt-y");
+    var btnAdd = section3.querySelector(".btn-add");
+    var txtSum  = section3.querySelector(".txt-sum");
+    
+    btnAdd.onclick = function(){
+        var x = parseInt(txtX.value);
+        var y = parseInt(txtY.value);
+
+        txtSum.value = x+y;
+    }
+});
+querySelecotor(.클래스이름)만 하면된다.
+<input name="x" type="text" value="0" dir="rtl"/> 
+name값으로도 검색할 수있다.
+var txtX = section3.querySelector("input[name='x']");
+기존의 속성이뭐가됫든 다양한 속성들로 선택을 할 수 있다.
+css셀렉터의 표현방법이 매우 풍부해져서 검색하기 편해졋다. j쿼리가 그런것들을 해줘서 많이 선택했엇던것이다.
+
+27. Node와 Element Node그리고 childNodes, children
+노드와 element 노드의 차이점을 알아보고자 한다.
+tree모양 , 가계도 모양으로 관계를 가진다.
+사진참조
+이 부모 자식간의 관계, 포함하는 윗단의 내용을 가지고 선택할 수 있다.
+<section id="section4">
+    <h1>Ex4 : chlidNodes를 이용한 노드 선택</h1>
+    <div class="box">
+        <input/>
+        <input/>
+    </div>
+</section>
+----
+window.addEventListener("load", function() {
+    var section4 = document.querySelector("#section4");
+    //var inputs = section4.querySelectorAll("input");
+    var box = section4.querySelector(".box");
+    var input1 = box.childNodes[0]
+    var input2 = box.childNodes[1]
+    input1.value = "hello";
+    input2.value = "okay";
+    
+});
+node와 elementnode를 잘알아야한다.
+childNodes자식 노드를 찾는 건 맞다. 그런데 0번째가 input일수도 아닐수도잇다.
+주석도 자식임. text도 자식임. 붙여쓰면 빈공백이 없어서 자식이아님 그런데 빈공백도 자식node가 되버림.
+<div class="box"><input/><input/> 그래서 이렇게 하면 잘나옴.
+var input1 = box.children[0] var input2 = box.children[1] 해주면된다.
+childNodes는 공백이든 주석이든 모든것들을 자식으로 뽑는거임.
+children은 태그형태만 뽑음. 일반적으로 태그를 대상으로 하니 이걸 사용하자.
+자식을 순회하는경우에 이걸 사용하도록하자.
+
+그럼 node와 elementnode는 뭔가 node는 뭔가 타입이 뭔가 다음시간에!
+
+28. Node의 종류와 개체 형식
+document라는 객체가 하나의 보따리 역할을 하고 있다. 객체들이 존재하려면 형식이 필요하다.
+사진참조
+entity는 컨텐트에 > 같은거를 쓰고싶은데 이미 태그를 표현하기 위해서 사용못함 그래서 \&gt; 이런식으로 사용해야한다.
+이런것들이 entity이다. 이런 예약된 키워드들이 entity이다.
+&와 ;를 entityReference이다.
+CDATASection은 기호를 많이쓰면 이거로 감싸면 특수기호를 마음것써도됨.
+Notation은 표현형식을 표현하는 표기법
+
+이런녀석들이 읽혀지면 객체화된다. 이런 타입들이 공통분모를 가지고 있는데 이 공통분모를 하나로 추상화하는데 이것이 Node이다.
+element, attriute, document, text를 많이 건들것이다.
+예ㅒ들이 가진 공통 부분이 Node이니 Node도 알아야한다.
+
+29. Node 인터페이스
+다음부터 예제로 노드를 조작하거나 변경할것임. 그런데 이것을 조작하는게 Node의 인터페이스이다.
+
+https://www.w3.org/TR 기술문서를 찾아보자.
+예시들이 있다. 설명을 해주는데 위키처럼 볼 수 있다.
+interface Node : EventTarget 상수들이 정의되어있다.
+const unsigned short ELEMENT_NODE = 1;
+const unsigned short TEXT_NODE = 3;
+readonly attribute DOMString nodeName;
+노드 순회 [SameObject] readonly attribute NodeList childNodes;
+등등
+Element들이 이 노드의 추상인터페이스를 가지고 잇음. 
+
+이런속성들을 다 찾아봐야하나? 거의 동일하고 같기때문에 구조만 보자. DOM이 잇고 이걸 설정하는 HTML인터페이스등이 잇고 그런걸 알자.
+어느 범주에 잇는건지 기억만 해두자. 어느 인터페이스로부터 구현되는지만 알아두자.
