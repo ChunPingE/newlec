@@ -1,2 +1,2 @@
 # newlec
-자습용 HTML
+자습용 HTML CSS JAVASCRIPT
