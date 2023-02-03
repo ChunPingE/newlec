@@ -1,0 +1,376 @@
+30. 엘리먼트 노드의 속성변경 예제 - 사진 변경
+실제적으로 dom객체를 사용하는 방법을 알아보자.
+<section id="section5">
+    <h1>Ex5 : 엘리먼트 노드의 속성변경</h1>
+    <div>
+        <input class="src-input"/>
+        <input class="change-button" type="button" value="변경하기">
+    </div>
+    <div>
+        <img class="img"/>
+    </div>
+</section>
+//Ex5 : 엘리먼트 노드의 속성변경
+window.addEventListener("load", function() {
+    var section = document.querySelector("#section5");
+    var srcInput = section.querySelector(".src-input");
+    var changeButton = section.querySelector(".change-button");
+    var img = section.querySelector(".img");
+
+    changeButton.onclick = function(){
+        img.src = "images/" + srcInput.value;
+    };
+});
+속성을 이용해서 주소를 input값의 밸류값을 가져다가 만들엇음.
+텍스트를 받아 변경을 했는데 다른 것으로 해보자.
+입력값은 세가지가 잇다.
+사용자가 선택한 벨류값이 나온다.
+<section id="section5">
+    <h1>Ex5 : 엘리먼트 노드의 속성변경</h1>
+    <div>
+        <!-- <input class="src-input"/> -->
+        <select class="img-select">
+            <option value="img1.jpg">img1</option>
+            <option value="img2.jpg">img2</option>
+            <option value="img3.jpg">img3</option>
+        </select>
+        <input class="change-button" type="button" value="변경하기">
+    </div>
+    <div>
+        <img class="img"/>
+    </div>
+</section>
+
+//Ex5 : 엘리먼트 노드의 속성변경
+window.addEventListener("load", function() {
+    var section = document.querySelector("#section5");
+    var imgSelct = section.querySelector(".img-select");
+    var changeButton = section.querySelector(".change-button");
+    var img = section.querySelector(".img");
+
+    changeButton.onclick = function(){
+        img.src = "images/" + imgSelct.value;
+    };
+});
+select선택지에서 선택한게 value값이 된다.
+사진참조
+또다른 선택지가 HTML5에서 등장한게잇다.
+<input class="src-input" list="img-list"/>
+<datalist id="img-list">
+    <option value="img1.jpg">img1</option>
+    <option value="img2.jpg">img2</option>
+    <option value="img3.jpg">img3</option>
+</datalist>
+텍스트 박스에다가 list를 넣어준다.
+사진참조
+
+주된내용은 element얻어와서 그 속성을 자바스크립트에서도 쓸수잇다는 것이다.
+
+31. CSS 스타일 속성변경
+element를 얻어와서 변경했는데 비슷하다.
+css의 속성은 element인 style이 가지고 있는 속성이다.
+txt1.style.border 무조건 문자열이다. 값을 대입할때 문자열을 대입하자. ex) "100px"수치를 적어 넣자.
+값을 한번에 안넣고 하나씩 넣는 경우가 있는데 
+txt1.style.border-width -> -자체가 안되기때문에 명령규칙자체가 안된다.
+<input type="color" class="color-input" />
+<img class="img" src="images/img1.jpg" style="border:1px soild red;"/>
+평소하던대로하고
+img.style["border-color"] = colorInput.value; []안에 넣으면 다 표현가능하다.
+img.style.borderColor = colorInput.value; 혹은 이런식으로도 가능하다.
+class이름을 얻기위해서는 className해야한다.
+
+32. 텍스트 노드를 동적으로 추가/삭제
+텍스트노드는 element노드든 추가하거나 생성하는 방법은 똑같다.
+만들엇다고 그냥 보이는게 아니라 객체를 tree구조에 붙인다고 명령해줘야한다.
+append한다고 해줘야한다. insert하면 중간에 보인다.
+이것은 document객체의 기능을 사용해서 만드는데
+element는 createElement(in DOMString tagName)
+Text는 createTextNode(in DOM data);
+
+이걸 만들엇다하면 화면에 보여주기 위해서 insert / appendChild해달라햐면된다.
+순서는 다음과 같다.
+1. 텍스트 노드 생성
+var txt = document.createTextNode("안녕하세요");
+2. 텍스트 노드를 추가할 엘리먼트 노드 선택
+var div1 = document.getElementById("div1);
+3. 엘리먼트 노드에 텍스트 노드 추가하기.
+div1.appendChild(txt);
+<section id="section6">
+    <h1>Ex6 : 노드조작 : 메뉴 추가(createTextNode, Element)</h1>
+    <div>
+        <input class="title-input" name="title"/>
+        <input type="button" class="add-button" value="추가"/>
+        <input type="button" class="del-button" value="삭제"/>
+    </div>
+    <div class="menu-list">
+
+    </div>
+</section>
+-------
+window.addEventListener("load", function() {
+    var section = document.querySelector("#section6");
+
+    var titleInput = section.querySelector(".title-input");
+    var menuListDiv = section.querySelector(".menu-list");
+    var addButton = section.querySelector(".add-button");
+    var delButton = section.querySelector(".del-button");
+
+    addButton.onclick = function(){
+        var title = titleInput.value;
+        var txtNode = document.createTextNode(title);
+        menuListDiv.appendChild(txtNode);
+       
+    };
+
+    delButton.onclick = function(){
+        var txtNode = menuListDiv.childNodes[0];
+        menuListDiv.removeChild(txtNode);
+    };
+});
+titleInput.value;입력받은 input값을 value에 넣고 이것로 텍스트 객체를 만듬.
+삭제는 removeChild하면되는데 선택해서 삭제는 아직 불가능하니 menuListDiv.childNodes[0]; index가 0번인애부터 삭제할수잇다.
+
+33. 엘리먼트 노드 추가(appendChild, append, innerHTML)/삭제(removeChild, remove) 그리고 주의할 점들
+33.1 element노드 추가
+현실적인 에제 element노드를 추가삭제해보자.
+대부분 element단위가 통채로 들어가는 일이 많다.
+이전에 txtNode를 만들엇는데 여기에 element노드두개를 더 만들고 결합하면된다.
+element노드는 태그명으로 만들면 된다.
+var aNode = document.createElement("a");
+var liNode = document.createElement("li");
+계층구조로 li안에 a를자식으로두고 txt노드는 a의 자식으로 들어가야한다.
+aNode.href="";
+aNode.appendChild(txtNode);
+
+liNode.appendChild(aNode);
+       
+menuListUl.appendChild(liNode);
+
+a노드를만들고 속성을 추가하고 txtNode를 넣고 다시 li노드에 밑에 요소들을 추가하고
+다시 ul에 appendChild하는 순서대로 가면된다.
+
+그런데 이런형태라면 매우 귀찮고 복잡하다!!
+element가 복잡하면 이렇게 직접 만들일이 없다.
+var title = titleInput.value;
+menuListUl.innerHTML = '<li><a href=\"\">' + title + '</a></li>'
+단 두줄로 정리가 된다. 텍스트 결합방식으로 추가해주면된다. 안에 ""들어가니 ''로 감싸주자
+무슨뜻인가?  menuListUl이 포함하는 안쪽의 HTML(innerHTML)태그 모양 문자를 넣으면 읽어서 노드객체들을 만들어줌
+알아서 객체화되서어서 들어가진다.
+
+그런데 문제가 또 있다. 대입연산자라서 원래있던것들이 사라진다. 대입해버리니 기존내용이 없어져버림
+menuListUl.innerHTML += '<li><a href="">' + title + '</a></li>' 그럼덧셈연산자를 하면됨
+그런데 이것도 내부적으로는 문제가있음. 안쪽에 있는것이 문서객체인데 문자열로 변환이되서 거기에 다시 문자열이 추가되고 더 커진 문자열이 만들어짐.
+객체를 만들때 만들 객체가 점점 많아짐 성능에 문제가 잇음.
+계속 추가할거면 직접 추가하는 것으로 하는게 맞다. 
+
+33.2 삭제 
+var liNode = menuListUl.children[0]; children은 모든 대상이아니라 element만을 선별해서 첫번째를 의미한다
+
+33.3 성능 완화
++= 햇던것을 성능을 완화해보자.
+var html = '<a href="">' + title + '</a>';
+var liNode = document.createElement("li");
+liNode.innerHTML = html;
+
+menuListUl.appendChild(liNode);
+
+li는 직접 객체를 생성한다. li에 a태그+txt노드를 대입을 한다.
+그리고 기존에 append하는거라 구조를 다시 만드는 것이 아니다.
+
+과거에는 append하는 것이 appendChild밖에 없엇다. txtnode를 생성할때 항상 문자열로 추가해야햇다.
+반드시 내용을 추가할때 노드를 만들고 추가햇어야햇다.
+그래서 그냥 append메소드가 생겨낫다. 
+menuListUl.append(node1, node2, node3); 
+가변길이배열로 node를 넣을 수있다. 또한 문자열도 가능하다.그래서 굳이 텍스트를 넣을때 텍스트 노드를 만들 필요가 없어졋다.
+
+삭제도 부모를 얻어서 자식을 지웟어야햇다.
+liNode.remove();그냥 자신을 지워달라 할 수있다.
+
+34. 노드 복제 및 템플릿(template) 복제
+게시글 형태가 있는데 레코드를 추가하고 싶다. 노드가 한두개가아님. td tr등등 한번에 생성해서 추가하기는 귀찮다.
+그냥 복사해서 넣고싶다. 첫번째 노드를 복사해서 넣겟다. 노드 복제가 불가능한경우도 있는데 그것도 설명학려고 한다.
+버튼을 클릭하면 복제해서 데이터만 바꿔치기 해서 넣을 것임.
+var notices  = [
+    {id:5, title:"파이야", regDate:"2023.02.03", writerId:"newlec", hit:0},
+    {id:6, title:"추가할내용", regDate:"2023.02.03", writerId:"newlec", hit:17}
+]
+일단 넣을 녀석들을 json형식으로 준비햇다.
+
+var noticeList = section.querySelector(".notice-list");
+클론할 녀석을 가져와야한다. 이것은 테이블이다. 
+var trNode = noticeList.querySelector("tbody tr");
+tbody의 tr을 가져오는 것이다.
+복제하는 것은 cloneNode()메소드를 쓰면된다. false넣으면 껍데기만 복사 true넣으면 안에 자식노드,자손노드들도 복제한다.
+var cloneNode = trNode.cloneNode(true);
+
+tbodyNode.append(cloneNode); tbody에 추가하면된다.
+통채로 복사되서 들어간다. 그럼 복제만 하지말고 json의 내용을 넣고싶다.
+cloneNode에서 querySelectorAll() 메소드로 td들을 뽑는다.
+var tds = cloneNode.querySelectorAll("td");
+tds[0].innerText = notices[0].id;
+tds[1].innerHTML = '<a href="">' + notices[0].title; + '</a>'
+tds[2].textContent = notices[0].regDate;
+tds[3].textContent = notices[0].writerId;
+tds[4].textContent = notices[0].hit;
+
+뽑은 tds의 인덱스를 이용해서 하나씩 넣는다. json의 0번째의 id~를 넣을것임.
+title은 링크도 들어가야하니 innerHTML로 해준다.
+innerText textContent는 같은 거임!! 편한거 사용하자.
+
+그런데 복제는 문제가 잇음. 처음 배포를 하면 데이터가 없어서 복제할게 없다.
+
+그래서 html5에는 탬플릿이라는게 존재한다.
+<template>
+    <tr>
+        <td></td>
+        <td><a href=""></a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</template>
+탬플릿이니까 비어있는 것임. 이걸 클론하듯이 복제하면된다. 탬플릿이라 화면에는 안보인다.
+var cloneNode = document.importNode(template.content, true);
+template이 가지고 있는 내용물을 import하는 것이다. template의 컨텐트를 다 가져오겟다. 하는 것임.
+이제 이걸 가져오면 클론노드가 되는 것이다.
+templateButton.onclick = function(){
+    var template = section.querySelector("template");
+    var cloneNode = document.importNode(template.content, true);
+
+    var tds = cloneNode.querySelectorAll("td");
+    tds[0].innerText = notices[0].id;
+    tds[1].innerHTML = '<a href="">' + notices[0].title; + '</a>'
+    tds[2].textContent = notices[0].regDate;
+    tds[3].textContent = notices[0].writerId;
+    tds[4].textContent = notices[0].hit;
+
+    tbodyNode.append(cloneNode);
+};
+나머지는 형식이 같다.
+
+그런데 데이터 수만큼 넣어야한다. 동시에 반복되도록 넣고싶다. for문으로 만들면된다.
+
+
+https://github.com/newlecture/javascript-dom-programming-example 예제 보는법
+
+35. 노드 삽입(insertBefore, insertAdjacentElement), 노드 순회
+그전엔 노드 추가 삭제엿는데
+변경하기 위해 replace하거나 추가를 위해 insert 해보자
+downButton 을 누르면 밑에 위치와 바꾸기
+먼저 처음 녀석을 선택해야함.
+지금까지는 자식으로 선택했엇다. var currentNode = tbodyNode.children[0];
+순회하는 방법이 있다. 
+범주에서 선택하게 된다.
+parentNode; / firstChild / lastChild / previousSibling / nextSibling이 있다.
+부모 / 첫 자식 / 마지막자식 / 앞형제 / 뒤형제 
+그런데 얘는 element만 하는게 아니라 텍스트 주석등을 모두 들린다.
+element만 대상으로 한다면?
+firstElementChild / lastElementChild / previousElementSibling / nextElementSibling
+하면된다.
+
+35.1 내려가기
+var currentNode = tbodyNode.firstelementChild;그래서 이렇게 해주면된다.
+함수안에서는 먼저
+다음 노드를 고른다. 
+var nextNode = currentNode.nextElementSibling;
+다음노드가 없다면? alert으로 못가게해준다. return이 나오게 해준다.
+if(nextNode == null){
+    alert("더이상 이동할 수 없습니다.");
+    return;
+}
+그리고 일단 현재 화면에서 이 노드를 없앤다.
+메모리에서 사라지는 것은 아님. 
+아직 참조하는 변수가 남아있어서 없어지는 것은 아니다.
+이 참조하는게 없어지면 수거가 된다.
+tbodyNode.removeChild(nextNode);
+누군가를 대상으로 insert하면된다. insertBefore(삽입할거, 기준)
+tbodyNode.insertBefore(nextNode, currentNode);
+빠진다음 현재거 전에 넣는 방식이다.
+
+35.2 위로 올라가기
+반대로 가면된다 떼어낼 것을 현재 노드를 선택하고 얘를 앞으로 붙이면된다.
+insertBefore밖에 없어서 이렇게 밖에 못한다.
+
+다행스럽게 insert할때 after도생겻다.
+insertAdjacentElement(position, element)이다.
+insert하는데 이웃하는 곳에 삽입하겟다. 타겟 포지션에 삽입하겟다.
+beforebegin / afterbegin / beforeend / afterend
+p의 밖 이전 / 안쪽의 맨처음 / 안쪽의 맨뒤 / p의 밖 맨뒤
+
+그런데 사실 insertBefore하면 그냥 얘가 이동하는거라 굳이 삭제를 안해도 된다.
+currentNode.insertAdjacentElement("beforebegin", nextNode);
+currentNode.insertAdjacentElement("afterend", preNode);
+훨씬 더 직관적이게 되었다.
+
+36.  다중 엘리먼트 선택방법과 일괄 삭제
+선택상자가 있는데 선택된 것들을 일괄삭제 하거나 자리를 바꾸자.
+
+36.1 일괄선택
+체크박스가 체크되면 안에 잇는 tbody에있는애들이 같이 선택되게하기
+Checkbox.onchange는 값이 변경되엇을때를 의미한다. 즉 체크되엇을때
+allCheckbox.value;
+allCheckbox.Checked;
+
+밸류값으로 봐야하나? 체크된것으로 봐야하나?
+전자는 체크되면 on 후자는 boolean값을 준다. 
+input박스는 서버에게 사용자 입력값을 전달하는 입력도구임. 
+여기서 value는 선택햇을때의 라벨에 해당하는 값을 전달하는 것임. 기본값이 on인데 우리가 여기서 사용하지는 않는다.
+
+allCheckbox.Checked;가 true나 false상태이니 이것을 사용하자.
+var inputs = tbodyNode.querySelectorAll("input[type='checkbox']");
+이것이 selecotr api 인데 Attirbute selector로 인풋태그명의 속성이 체크박스인거만 가져오자.
+for(var i = 0; i < inputs.length; i++){
+    inputs[i].checked =  allCheckbox.Checked;
+}
+반복문에서 돌면서 모든 인풋들을 체크박스로 만들기
+
+36.2 일괄삭제
+var inputs = tbodyNode.querySelectorAll("input[type='checkbox']");
+또 체크여부를 가져온다.
+if (inputs[0].checked){} 만약 체크되엇다면?
+이 input의 부모 td 의 부모 tr 두번의 부모를 찾아가서 tr자체를 삭제해야한다.
+inputs[0].parentElement.parentElement.remove(); 두번 적용하면 부모의 부모한테 간다.
+이걸 반복해서 할 수도 있는데 한번한번 다 물어보는 것보단 체크된거만 가져오는게 효율적이다.
+
+체크된것을 가져오기 위해 pseudo-class-selector 를 사용하자
+var inputs = tbodyNode.querySelectorAll("input[type='checkbox']:checked");
+checked된 input박스만 가져온다.
+for(var i = 0; i < inputs.length; i++){
+    inputs[i].parentElement.parentElement.remove();
+}
+매번 묻는것보다 효율적이다.
+
+37. 두 엘리먼트의 자리 바꾸기
+일단 두개여야만 바굴수잇으니 선택을 두개만 하도록하자.
+if(inputs.length != 2){
+    alert("두개가 선택되어야 합니다.");
+    return;
+}
+스위칭되어야하는것도 부모의 부모이다.
+var trs = [];
+for(var i = 0; i < inputs.length; i++){
+    trs.push(inputs[i].parentElement.parentElement);
+}
+부모들을 배열에 담는다.
+둘을 빼고 넣어야하는데 자기 위치로 와야하니 인접한 애를 기억하고 이 기억한애를 기준으로 가야한다.
+아는게 insert밖에 없으니 그렇다.
+
+rlplaceChild 와 replaceWith가 있다.
+rlplaceChild 부모 입장에서 tbody에서 둘을 바꾸겟다이다.
+replaceWith는 tr자체가 다른애를 지목하고 바꾸자는 것이다.
+insertBefore보다 깔끔하게 바꿀 수 있다.
+
+replaceWith를 사용하면 지목한애가 빠지고 지목당한애가 걔가 들어간다.
+그다음에 빠진애가 기억한 위치로 들어가야한다. 그런데 이 위치를 기억하기가 쉽지않다.
+그러면 직접빠지지 말고 사본을 만든다. 이 복제본을 먼저 보낸다. 
+보내면 거깃던게 빠진다. 이걸 원래잇는애라아 바꾼다.
+
+var cloneNode =trs[0].cloneNode(true); a의 복사본을 만들엇다. 
+trs[1].replaceWith(cloneNode); 클론된 녀석을 넣고 trs[1]이빠진다.
+
+그리고 이제 빠진얘를 원본에 replaceWith하면 원본에 빠진애가 들어가게 된다.
+그럼이제 trs[0]이 남아잇는데 지역변수이기 때문에 자연스럽게 함수가끝나면 사라진다.
+
+
+
+
