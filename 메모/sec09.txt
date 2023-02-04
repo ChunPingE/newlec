@@ -1,0 +1,382 @@
+38.  제목으로 내용 정렬하기
+테이블의 제목을 얻어내고 제목을 누르면 정렬이 되도록 해보자.
+부모의 부모를 얻어내서 조작하자.
+정렬할때 주의사항 ui를 기반으로 정렬하는 것은 잘못됫다.
+프론트는 데이터가 화면에 박힌게 아니라 서버에서 받아온 것이기 때문이다.
+정렬하겟다는 것은 서버에서 데이터를 가져오는 것이다. ajax로부터 가져와서 새로만드는 것이다.
+7강에서 햇듯이 데이터가 잇고 템플릿을 통해 새로 만든다.
+데이터를 가지고 이 데이터로 조작을 해야한다.
+
+var notices = [
+    {"id":1, "title":"유투브에 끌려다니지 않으려고 했는데....ㅜㅜ..", "regDate":"2019-02-05", "writerId":"newlec", "hit":2},
+    {"id":2, "title":"자바스크립트란..", "regDate":"2019-02-02", "writerId":"newlec", "hit":0},
+    {"id":3, "title":"기본기가 튼튼해야....", "regDate":"2019-02-01", "writerId":"newlec", "hit":1},
+    {"id":4, "title":"근데 조회수가 ㅜㅜ..", "regDate":"2019-01-25", "writerId":"newlec", "hit":0}
+];
+이 가진데이터로 먼저 바인딩하자.
+템플릿을 가지고 데이터 바인딩하기.
+var bindData = function() {
+    var template = section.querySelector("template");
+    for (var i = 0; i < notices.length; i++){
+        var cloneNode = document.importNode(template.content, true);
+        var tds = cloneNode.querySelectorAll("td");
+        tds[0].textContent = notices[i].id;
+        tds[1].innerHTML = '<a href="">' + notices[i].title; + '</a>'
+        tds[2].textContent = notices[i].regDate;
+        tds[3].textContent = notices[i].writerId;
+        tds[4].textContent = notices[i].hit;
+
+        tbodyNode.append(cloneNode);
+    } 
+};
+bindData();
+
+1.템플릿을 가져오고 2.템플릿을 복사한 클론노드만듬 3.클론노드의 td를 뽑음. 
+4.각각에 데이터심음 5.tbody의 자식으로 클론노드를 넣음. 6.함수실행
+
+동적으로 데이터를 심고있으니 notices를 정렬해서 다시 바인딩하면된다.
+배열을 어떻게 정렬하나? script가 가지고 있는 ui이다.
+javascript array sort를 검색해보자.
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+value를 기준으로 정렬한다면 if(a.value > b.value) 같다 크다의 기준만 제공해주면된다.
+
+titleId.onclick = function(){
+    notices.sort(function(a,b){
+        if(a.title < b.title){
+            return -1;
+        } else if(a.title > b.title) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+    bindData();
+};
+sort하는데 title을 비교해서 작으면 -1 크면 1 같으면 0인데
+그런데 새로 추가하는 거라 기존 내용을 지워줘야한다.
+tbodyNode.innerHTML = ""; remove를 하는게 아니라 그냥 빈 문자열로 바꿔버리자.
+
+정렬된후에 정렬되면 또 반대로 정렬하기 
+로 설정해준다. 그리고 뒤집어준다.
+정렬이 한번도 안된 상태면 정렬을 하고 아니면 뒤집기만 실행되도록 해준다.
+var titleSorted = false; -> var titleSorted = true;로 되게 해준다.
+한번 호출했으면 정렬했어요~ 해준다.
+---
+var titleSorted = false;
+
+titleId.onclick = function(){
+    tbodyNode.innerHTML = "";
+    if(!titleSorted){
+        titleSorted = true;
+        notices.sort(function(a,b){
+            if(a.title < b.title){
+                return -1;
+            } else if(a.title > b.title) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+    } else{
+        notices.reverse();
+    }
+    bindData();
+};
+---
+이렇게 데이터를 기반으로 뒤집어주는게 맞다. 화면만으로 뒤집는 건 말이 안된다.
+다음부터는 이벤트로 가자. 굳이 제목만 한이유는 나머지 정렬은 반복적으로 만들면된다.
+반복을 안하려면 이벤트 버를러로 처리하면된다. 이 것을 응용해서 이벤트로 접목하려고 한다.
+
+39. 이벤트와 이벤트 객체
+document를 조작했는데 이걸 넘어서서 이벤트가 발생햇을때 이벤트전달되는 객체에 대해서 알아보고자 한다.
+지금까지는 이벤트 객체를 안만들엇다. 
+현재 클릭했다는 이벤트가 발생햇을때 그거로 document를 조작햇다.
+그럼 이벤트가 발생할때 부가적인 정보가 있을 것인데 무엇인가?
+어느위치를 ? 누굴 클릭했나?
+키가 눌렸다. 어디에서? 어떤키가? 어떤키와함께? 라는 것을 알면 더 다양하게 다룰수잇다.
+window.event객체
+
+이벤트 객체는 이벤트에 따라 달라진다. 클릭 더블클릭 등등을 하면 이벤트 객체들이 이 이벤트를 구현하는 인터페이스이다.
+blur는 포커스를 잃엇을때 입력하면 입력관련 이벤트 키보드 이벤트 등등을
+이벤트 중 가장 많이 사용하는건 마우스 이벤트와 키보드 이벤트이다.
+그런데 이런 이벤트들이 공통으로 가지고 있는 것이 있다.
+다음과 같다.
+사진참조
+이런 인터페이스들이 어디서 사용되는 지 알아야한다.
+그리고 이 속성들을 상속받는 UI 이벤트가 있다.
+사진참조 1
+이것을 또 상속받는 마우스 키보드 이벤트가 잇다.
+사진참조 23 
+마우스는 어떤 곳을 클릭햇는지 보는 것 키보드는 어떤 키를 눌럿는지 등이 잇다.
+이전에는 마우스 클릭됫으면 클릿됫구나 이벤트 발생햇구나 일해야햇는데 이제 누가 클릭햇는지 등을 알아보고자 한다.
+
+40. 이벤트 객체의 target 속성 이용하기
+이벤트를 다루기 위한 가장 중요한 target속성을 알아보고자 한다.
+전에 이미지를 선택했다.  전에는 이미지 소스 값을 얻어서 변경했다. 소스값을 따로 얻는게 아니라 클릭한 것을 대입하려고 한다.
+그래서 이제 클릭한게 무엇인지를 알아야한다. 이전에는 선택상자로 알앗는데 이벤트로 이 타겟이 무엇인지 알아야한다.
+
+element는 구조로 되어있는데 마우스가 맞닿는 가장바깥에서 클릭되는 것을 얻어야한다.
+이게 클릭되면 event.target을 얻게 된다.
+만약 클릭된게 이미지라면 event.target.src img의 속성 src를 쓸수잇게된다.
+그럼 이제 이벤트 객체를 다룰 수 잇어야한다.
+var currentImg = section.querySelector(".current-img");
+var imgs = section.querySelectorAll(".img");
+
+보여줄것을 currentImg 클릭된것을 처리하기 위해 모든 이미지를 가져왓다.
+
+imgs[0].onclick = function(e){} function에 인자값으로 이벤트가 발생했다는 키워드를 준다.
+그래서 누가 타겟인지 알 수 있도록 e.target 을 하면 현재 누가 타겟이 되엇는지를 알 수 있다.
+
+imgs[0].onclick = function(e){
+    currentImg.src = e.target.src;
+    
+};
+imgs[1].onclick = function(e){
+    currentImg.src = e.target.src;
+    
+};
+imgs[2].onclick = function(e){
+    currentImg.src = e.target.src; 
+}
+});
+현재 타겟된것의 속성을 얻어서 보여줄 곳의 이미지의 속성을 바꾸는 것이다.
+그런데 코드가 반복되서 비효율적이다. 반복문으로 해결하면된다.
+
+for (var i = 0 ; i < imgs.length; i ++ ) {
+    imgs[i].onclick = function(e){
+        currentImg.src = e.target.src;
+    };
+}
+그럼 이렇게 하면되지 않을까? 근데 이렇게 하면안됨. 돌아가긴함.
+현재 우리는 반복되는 횟수만큼 function을 반복하고 있는 것임.
+이렇게하면 메모리를 많이 먹는다.
+나중에 배울 버블링 시스템을 이용하면 이 반복을 줄일 수 있다.
+여기는 일단 이렇게 적어두자.
+
+40.1 연습문제 풀어보자. 클릭된걸 삭제해보자.
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section1-1");
+    var delButtons = section.querySelectorAll(".del-button");
+
+    for (var i = 0; i < delButtons.length; i++) {
+        delButtons[i].onclick = function (e) {
+            var currentTarget = e.target.parentNode.parentNode;
+            currentTarget.remove();
+        };
+    }
+});
+del-button이 클릭됫을때 배열로 돌아가면서 선택하는데 타겟의 부모(td)의 부모(tr)을 가서 
+그것을 삭제해버리기! 성공!!
+어려웟던점 1-1인데 바인딩을 잘못해서 클릭자체가 안된점. parentNode까먹은점.
+
+41. 이벤트 버블링을 이용해 사용자 이벤트 처리하기
+이벤트 버블링을 사용하지 않으면 코드가 비효율적이게 된다.
+반복될때마다 function객체를 만들어야해서 비효율적이다. 버튼의 수만큼 반복문을 돌리는거 자체가 비효율적이다.
+imgs를 가져오는게 아니라 img들을 리스트로 가져오자.
+<div class="img-list">
+    <img class="img" src="images/img1.jpg" style="height: 50px;" />
+    <img class="img" src="images/img2.jpg" style="height: 50px;" />
+    <img class="img" src="images/img3.jpg" style="height: 50px;" />
+</div>
+
+그 부모에 이벤트를 얻어와도 자식을 클릭했다는 것을 알 수있다.
+클릭하면 운영체제가 마우스를 감지한다. 운영체제는 window를 관리한다. 브라우저는 자기가 관리하는 또다른 가상의 객체를 알아본다.
+그게바로 document객체이다. 이 이벤트를 가상의 객체에서 또 누가 클릭햇는지 발생한곳에 누가 있는지 알아보게 된다. 계속 내려가다가 맨밑단을 가면 이벤트가 발생햇음을 알게되고 이벤트핸들러가 있으면 이걸 실행시킨다.
+그런데 버튼이 여러개면? 모든 버튼들이 동일한 기능이라 하나씩 바인딩하는건 비효율적임. 바인딩시스템에서는 버블링이라는 기능이 있다.
+a버튼이 클릭되면 그것을 부모로 전달하고 부모로 전달해나간다. 그래서 버튼들이 같은 로직을 가지고 있다면 위쪽으로 올라가서 실행하는 것이다.
+사진참조
+그래서 맨밑에 그위에 이벤트를 달아놔도 버블링이 되서 아래에서 발생하는 이벤트가 위로 전달이 되고 반복적인 이벤트가 발생안하게 하고 대신처리할 수 있게 된다
+
+그런데 문제가 있다. 실제 클릭되지 않아도 list의 영역이 클릭되도 이벤트가 발생되게 된다.
+실제 자식이 클릭햇을때만 버블링되도록 조건을 줘야한다.
+그런데 자식이 클릭됫을때만 처리하게 작성하면 비효율적이니 자식이 아니라면 돌아가도록 처리해주자.
+if(e.target.nodeName != "IMG")  {
+    return;
+}
+
+처리는 똑같이 해주면된다.
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section2");
+    var currentImg = section.querySelector(".current-img");
+    var imgList = section.querySelector(".img-list");
+
+    imgList.onclick = function (e) {
+        if(e.target.nodeName != "IMG") {
+            return;
+        }
+        currentImg.src = e.target.src;
+    };
+});
+코딩에는 차이가 없어도 실행속도나 메모리에 대해서는 많이 차이난다.
+
+41.1 연습문제를 고쳐보자!!
+//연습문제 2-선택된 레코드 삭제하기:event target 버블링
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section2-2");
+    var delButton = section.querySelector(".del-button");
+
+    delButton.onclick = function (e) {
+        if (e.target.nodeName != "INPUT"){
+            return;
+        } 
+        var currentTarget = e.target.parentNode.parentNode;
+        currentTarget.remove();
+    };
+});
+
+어려웟던점 "INPUT" nodeName을 얻는데 이것을 대문자로 작성하는 것을 잊고 처음에 input이라 적엇다.
+눌러보고 대문자임을 알고 INPUT을 적엇는데 문자열로 받아온다는 것을 잊고 있었다.
+
+42. 이벤트 버블링을 멈춰야 하는 경우와 처리방법
+버블링을 왜 멈춰야하는가?
+같은 부모를 가진 영역에 다른 기능을 가진 버튼이 있다. 
+이벤트핸들러를 따로 달아줫다고 해보자. 그런데 여기서 문제가 발생한다.
+무엇일까?
+<div class="img-list">
+    <img class="img" src="images/img1.jpg" style="height: 50px;" />
+    <img class="img" src="images/img2.jpg" style="height: 50px;" />
+    <img class="img" src="images/img3.jpg" style="height: 50px;" />
+    <input class="add-button" type="button" value="추가" />
+</div>
+행위가 다른 이벤트를 만들었다.
+addButton.onclick = function (e) {
+    var img = document.createElement("img");
+    img.src = "images/img1.jpg";
+    currentImg.insertAdjacentElement("afterend", img);
+};
+img노드를 만들고 속성으로 images/img1.jpg을 추가해주자.
+그러면 <img class="current-img" src="images/img1.jpg"/> 가 currentImg밑에 형제로 추가되는 것이다.
+
+잘되는데
+문제가 없어보인다.? 그런데 문제가 있다.  addButton을하면 다시 imgList도 같이 발생한다 왜일까?
+버블링때문이다. 다시 부모에 있는 imgList.onclick이 발생하게 되는 것이다.
+비효율적이다. 이걸 막아야한다.
+e.stopPropagation();을 넣어주면된다.
+addButton.onclick = function (e) {
+    e.stopPropagation();
+    
+    var img = document.createElement("img");
+    img.src = "images/img1.jpg";
+    currentImg.insertAdjacentElement("afterend", img);
+};
+버블링을 막아라라는 메소드이다.
+
+문제가 없더라도 버블링을 막아줘야한다. 특정 기능만 구현햇을경우 로직이 없을 경우 막아주자. 
+
+연습으로 해보았다.
+<img class="img add-button" src="images/img2.jpg" style="height: 50px;" />
+버튼이아니라 같은 이미지라면? 누르면서 사진도 바뀌고 사진추가도 되게된다.
+이런일을 막기위해  e.stopPropagation();을 추가해주는 것이다. 버그가 나지 않도록 막을 수 있다.
+
+43. 여러 버튼을 가진 화면에서 이벤트를 처리하는 방법
+버블링을 막는것까지 배웟는데 예제가 달라지면? 버튼이 되게 많을때 어떻게 처리할가
+공통기능이 아닌 차이가 나는거면 어떻게 해야할까 레코드에 버튼이 3개씩잇는데
+레코드 * 3 20개라면 60개 기능을 만들어줘야한다. 그럼 말이 안된다. 함수하나로 끝내는데 개별화시키는 방법은
+<input class="sel-button" type="button" value="선택" />
+<input class="edit-button" type="button" value="수정" />
+<input class="del-button" type="button" value="삭제" />
+여기서 공통 이라면 ? tbody이다.
+보통 class를 하나만 가지고 있지 않는다. 그래서 class리스트중 그 이름이 있는지를 물어봐야한다.
+target.classList.contains("sel-button")
+현재 타겟의 부모의 부모로 가면되는데 중간에 span이나 div로 감싸는등 구조가 바뀔 위험부담이 있다.
+그래서 tr을 찾으려면 순회를 하면된다.
+var tr = target.parentElement 일단 현재 태그의 부모를 기준으로 삼고 이게 tr인지 물어보자.
+아니라면 다시 그 부모의 부모로 간다. tr을 만날때까지 간다.
+if(target.classList.contains("del-button")){
+    var tr = target.parentElement
+    for (; tr.nodeName != "TR"; tr = tr.parentElement) {
+    }
+    tr.remove(); 
+}
+부모로 계속 올라가는데 tr이아니라면? 계속 for문을 돌게 한다.
+for문 (초기문 ; 조건문 ; 증감문)에서 숫자가 아니라 element를 순회하게 하는거임.
+for문(첫부모기준 ; tr아니냐? 맞으면 빠져나옴 틀리면 증감문으로; 부모의 부모로 간다. )
+https://seoyun-is-connecting-the-dots.tistory.com/46
+초기화식(초기문)을 생략하면? 이미 초기화되어있던 변수를 사용하게 되는 거임.
+int i = 0; 미리해두고
+for(; i < 5 ; i++){} 하면 미리 초기화해둔 i값 0을 초기값으로 사용하는 거임.
+
+여기서는 tr을 for문에서 나와서 또 사용해야하니 for문 밖에서 초기화를 해둔거다.
+
+44. 엘리먼트 노드의 기본행위 막기
+기본행위을 막자.
+a태그를 사용하면 페이지가 로드가 된다.
+드래그앤드랍을 사용할건데 이미지가 기본적으로 드래그를 가지고 있다.
+그런데 요즘엔 꼭 버튼으로 구현하는게 아니라 링크로 구현하던지 이미지로 구현하던지
+등등을 하게된다.
+<a class="button sel-button" href="">선택<a>
+<a class="edit-button" href="">수정<a>
+<a class="del-button" href="">삭제<a>
+각각 링크를 버튼이라고 하고 기능을 수행하게 하고싶다.
+target.nodeName != "INPUT"을 target.nodeName != "A"로 바꾸면 작동은하는데 새페이지를 로드해버려서 없어진다.
+이걸위해서 기본 행위를 막으면된다.
+e.preventDefault(); 클릭에 어떤 것이 반응한다고 해도 원래 기능을 막아버린다는 것이다. default를 prevent 해버린다.
+
+tbody.onclick = function (e) {
+    e.preventDefault();
+
+    var target = e.target;
+
+    if (target.nodeName != "A"){
+        return;
+    } 
+        
+    if(target.classList.contains("sel-button")){
+        var tr = target.parentElement;
+        for (; tr.nodeName != "TR"; tr = tr.parentElement) {
+            
+        };
+        tr.style.background = "yellow";
+    } else if (target.classList.contains("edit-button")){
+        alert("수정버튼눌림!");
+    } else if (target.classList.contains("del-button")){
+        var tr = target.parentElement;
+        for (; tr.nodeName != "TR"; tr = tr.parentElement) {
+            
+        }
+        tr.remove(); 
+    }  
+};
+
+45. DOM 이벤트 객체 인터페이스
+이벤트 객체로 여러가지를 다루엇다. target 버블링 등을 사용할 수 잇음으 ㄹ배웟다.
+그런데 이벤트가 발생햇을때 전달되는 이벤트 객체가 다 동일한 객체인가? 그건 아니다.
+이벤트에 클릭햇다면? 어느위치를 어떤 element를 클릭햇는지
+키가 눌렷어요? 어떤키 어느 window에서인지 등등이 있다.
+이벤트에 따라서 키가 달라지는지 window.event객체햇을때 다다르다는 것이다.
+https://youtu.be/yt8dLmI6sR4
+마우스 이벤트는 마우스 키는 키이벤트 등등 이다. 그런데 얘들이 다 다른 분모를 가지고 잇느냐? 그건아님.
+이 객체들은 공통분모를 가지고 있다.
+트리거를 사용해보자. 위에 들엇던 강의랑 같은거임.!?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+새로운점!! 
+https://seoyun-is-connecting-the-dots.tistory.com/46 
+for문의 구조!!!
+
+for문에 숫자만 들어가는게 아니라는것을 알게되엇다. 그냥 초기화문 조건문 증감식이면 다된다.
+
+
+
+
+
+
+
+
+
+
