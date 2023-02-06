@@ -374,3 +374,18 @@ trs[1].replaceWith(cloneNode); 클론된 녀석을 넣고 trs[1]이빠진다.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
