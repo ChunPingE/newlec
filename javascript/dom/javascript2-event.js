@@ -1,3 +1,84 @@
+//Ex10. 마우스 이벤트 객체 : 박스의 옵셋 영역 좌표 이용하기
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section9-2");
+    var container = section.querySelector(".container");
+    var offset = {x:0 , y:0}
+    var current = null;
+    var status = section.querySelector(".status");
+    var left = container.offsetLeft;
+    var top = container.offsetTop;
+
+    var dragging = false;
+    document.onmousedown = function (e) {
+        if(e.target.classList.contains("box")){
+            dragging = true;
+            current = e.target;
+            offset.x = e.offsetX;
+            offset.y = e.offsetY;
+            
+        }   
+        
+    };
+
+    document.onmousemove = function (e) {
+        if (!dragging) {
+            return;
+        }
+        var x = e.pageX-offset.x - left;
+        var y = e.pageY-offset.y - top;
+
+        current.style.left = x + "px";
+        current.style.top = y + "px";
+      
+        status.innerText = "(x,y):(" + x + "," + y + ")";
+    };
+
+    document.onmouseup = function (e) {
+        dragging = false;  
+    };
+
+});
+//Ex9-2. 마우스 이벤트 객체 : 박스의 옵셋 영역 좌표 이용하기
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section9-2");
+    var container = section.querySelector(".container");
+    var offset = {x:0 , y:0}
+    var current = null;
+    var status = section.querySelector(".status");
+    var left = container.offsetLeft;
+    var top = container.offsetTop;
+
+    var dragging = false;
+    document.onmousedown = function (e) {
+        if(e.target.classList.contains("box")){
+            dragging = true;
+            current = e.target;
+            offset.x = e.offsetX;
+            offset.y = e.offsetY;
+            
+        }   
+        
+    };
+
+    document.onmousemove = function (e) {
+        if (!dragging) {
+            return;
+        }
+        var x = e.pageX-offset.x - left;
+        var y = e.pageY-offset.y - top;
+
+        current.style.left = x + "px";
+        current.style.top = y + "px";
+      
+        status.innerText = "(x,y):(" + x + "," + y + ")";
+    };
+
+    document.onmouseup = function (e) {
+        dragging = false;  
+    };
+
+});
+
 //Ex9. 마우스 이벤트 객체 : 박스의 옵셋 영역 좌표 이용하기
 window.addEventListener("load", function () {
     var section = document.querySelector("#section9");

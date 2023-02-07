@@ -172,7 +172,7 @@ var y = e.pageY-offset.y - top;
 컨테이너가 relative형태여야 안쪽에 absolute들이 이 위치안에서 좌표를 설정한다.
 페이지 기반으로 하지만 컨테이너위치를빼줘야 위치가 정해진다.
 
-53. Mouse Event Capturing
+
 
 
 

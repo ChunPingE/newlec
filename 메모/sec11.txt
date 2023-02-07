@@ -1,0 +1,108 @@
+53. Mouse Event Capturings
+드래그 햇는데 또다른 문제가
+container 밖까지 이동이 된다. 박스밖으로 갓을 경우 Capturing이 안되는 경우도 있다.
+.container{
+    width: 800px;
+    height: 400px;
+    border: 1px solid gray;
+    overflow : hidden;
+}
+overflow: hidden / scroll 하면 안쪽 오브젝트들이 벗어나려할때 설정을 해주는 것이 있다.
+hidden하면 걍 안보이고 scroll하면 스크롤바가 생겨서 볼수있게 해준다.
+그런데 문제가 또 있다.
+벗어낫을때에도 누르는 이벤트를 받는데 박스는 이벤트를 받지 못해 움직이지 못한다.
+벗어낫을때도 이벤트를 받으려면 event Capturing을 해줘야한다.
+
+https://developer.mozilla.org/en-US/docs/Web/API/Element/setCapture
+캡쳐를 설정하고 나면 계속해서 이벤트를 얻는다. 스탠다드가 아니라 마소가 지원하는 것임.
+document.onmousedown = function (e) {
+    if(e.target.classList.contains("box")){
+        dragging = true;
+        current = e.target;
+        offset.x = e.offsetX;
+        offset.y = e.offsetY;
+        
+    }   
+    
+};
+
+document.onmousemove = function (e) {
+    if (!dragging) {
+        return;
+    }
+    var x = e.pageX-offset.x - left;
+    var y = e.pageY-offset.y - top;
+
+    current.style.left = x + "px";
+    current.style.top = y + "px";
+    
+    status.innerText = "(x,y):(" + x + "," + y + ")";
+};
+
+document.onmouseup = function (e) {
+    dragging = false;  
+};
+그래서 다른 방식으로 하려면 document에서 이벤트가 발생하게 해주면된다.
+영역을 section으로 잡으면 그 영역안에서만 잡히게 된다.
+영역을 뭘로잡을지를 선택하는게 중요하다.
+
+54.  DND API #1 : draggable 설정 ??
+마우스 다운 업등으로 시각적으로만 옮겻다.
+drag drop기능이 존재한다. 시각적인게아니라 데이터를 옮기는 것이다.
+예를들어 이미지가 가지고 있는 링크 a태그를 드랍해서 불러오게 해주는 것임.
+요즘엔 파일을 끌어와서 드랍하면 그 파일이 전송되게 하는 기능이 많다.
+<div class="box" draggable="true"></div> 하면 드래그가 된다. 원본박스는 안움직이고 복사본이 움직이는 느낌이다. 
+
+------------ jQuery 단 2강
+1. jQuery란 무엇이며 우리는 무엇을 배우게 될 것인가?
+왜쓰는가? 필요성
+가장기본적인 근간은 cross-browser 여러 브라우저에서 사용하기 위해 사용함 표준이 없엇음.
+단일하게 개발할수있는 기반이 jQuery이다. 다큐먼트 객체를 가져오기 nodeelement가져올때 매우 복잡해진다.
+이름을 얻고 등등 할게 많다. 이걸 css설렉터로 얻어오기 쉬워진다. 이걸 32kb만으로 쉽게 가능하게 해준다.
+요즘에는 웹표준을 지켜서 저절로 지원된다. css선택 Selectors api로 가능함.
+그러나 기본적으로 라이브러리로 한줄이라도 더 줄 수잇고 안정성이 잇어서 가능하긴 함.
+node삭제 등 jQuery기본 기능을 기본기능으로 가져오고 잇다. 그래도 뭔진 알아야 좋을 듯.?
+dom을할줄알면 jQuery 공부하기 쉽다. 어렵게 공부할 필요가 없다. 막상처음 접하면 api보기가 어렵다. 어떻게 쓰는지 알려주겟다.
+
+어떻게 써야하나? document object가 브라우저마자 다르다. 그래서 브라우저마다 if로 종류를 햇어야햇다.
+그 밖에 jQuery object가 잇어서 그걸 기준으로 할 수 있게 만들엇다. 노드 순회방법도 차이가 잇엇다.
+jQuery는 노드를 숨기는 것이라 하나만 사용해야한다. 요즘엔 필요한 부분만 쓴다.
+예는 플랫폼임. dom을 대신하는 것임. 
+
+2. jQuery로 시작하기
+jQuery라이브러리 다운받아야한다.
+https://jquery.com/download/
+
+Download the compressed, production jQuery 3.6.3 / Download the uncompressed, development jQuery 3.6.3
+압축 / 노압축 빈공백 주석 등 압축본은 내려쓰기없음. 개발할때는 후자 배포할땐 전자 사용
+내리다보면
+Other CDNs 제공하는 라이브러리를 호스팅해주는 사이트 디렉토리 가져다 안쓰고 링크로 쓰고싶을때 이거 사용
+가능하면 cdn사용하는게 낫다. 이게 없어질수도 잇으면 보험차원에서 다운받아서 사용하자.
+
+jquery는 document를 대신하는 것이다. img.src .style .appendChild()사용햇는데
+jQuery로 이걸 직접 사용안하는 것임. 
+jQuery(<img/>)하면 jQuery의 객체가 만들어진다. 그리고 이제 이 기능을 사용하는 거임. .attr("src", ...); .css() / apend()등등
+<img id="img1"/>
+<script>
+    jQuery(img1).attr("src", "images/img1.jpg")
+    //img.src = "img1.jpg";
+</script>
+원래는 후자로 작성햇는데 전자로 작성할 수있게 되엇다.
+jquery()쓰기 너무 기니가 $(img1).attr("src", "images/img1.jpg") $로 대신할 수도 있다.
+심지어 객체를 가져올때 querySelector했어야햇는데 사용하려면 dom객체를 가져와야햇는데
+var img1 = document.querySelector("#img1");
+jquery를 사용하면 dom객체를 가져오는 식조차 필요없어진다.
+$("#img1").attr("src", "images/img1.jpg")
+
+----------ec6차이
+
+
+
+
+
+
+
+
+
+
+

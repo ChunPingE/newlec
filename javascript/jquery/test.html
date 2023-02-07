@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <section>
+        <h1>Ex1 :계산기프로그램</h1>
+        <div>
+            <input id="txt-x" type="text" value="0" dir="rtl" />
+            +
+            <input id="txt-y" type="text" value="0" dir="rtl" />
+            <input id="btn-add" type="button" value="=">
+            <input id="txt-sum" type="text" value="0" dir="rtl" readonly />
+        </div>
+    </section>
+    <hr />
+    <script>
+        $(document).ready(function () {
+            var x = $("#txt-x").val();
+            var y = $("#txt-y").val();
+            $("#btn-add").click(function () {
+                alert(x, y);
+
+                //$("#txt-sum").attr("value", x + y);
+
+            });
+
+        });
+    </script>
+</body>
+
+</html>
