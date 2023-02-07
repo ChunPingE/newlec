@@ -1,3 +1,155 @@
+//Ex9. 마우스 이벤트 객체 : 박스의 옵셋 영역 좌표 이용하기
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section9");
+    var container = section.querySelector(".container");
+    var offset = {x:0 , y:0}
+    var current = null;
+    var status = section.querySelector(".status");
+    var left = container.offsetLeft;
+    var top = container.offsetTop;
+
+    var dragging = false;
+    container.onmousedown = function (e) {
+        if(e.target.classList.contains("box")){
+            dragging = true;
+            current = e.target;
+            offset.x = e.offsetX;
+            offset.y = e.offsetY;
+           
+        }   
+        
+    };
+
+    container.onmousemove = function (e) {
+        if (!dragging) {
+            return;
+        }
+        var x = e.pageX-offset.x - left;
+        var y = e.pageY-offset.y - top;
+
+        current.style.left = x + "px";
+        current.style.top = y + "px";
+      
+        status.innerText = "(x,y):(" + x + "," + y + ")";
+    };
+
+    container.onmouseup = function (e) {
+        dragging = false;  
+    };
+
+});
+//Ex8. 여러개 박스 드래그 방식으로 옮기기
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section8");
+    var container = section.querySelector(".container");
+    var box = section.querySelector(".box")
+    var offset = {x:0 , y:0}
+    var current = null;
+
+    var dragging = false;
+    container.onmousedown = function (e) {
+        if(e.target.classList.contains("box")){
+            dragging = true;
+            current = e.target;
+            offset.x = e.offsetX;
+            offset.y = e.offsetY;
+        }   
+        
+    };
+
+    container.onmousemove = function (e) {
+        if (!dragging) {
+            return;
+        }
+        current.style.left = e.pageX-offset.x + "px";
+        current.style.top = e.pageY-offset.y + "px";
+      
+       
+    };
+
+    container.onmouseup = function (e) {
+        dragging = false;  
+    };
+
+    // box.onmousedown = function(e){
+    //     offset.x = e.offsetX;
+    //     offset.y = e.offsetY;
+    // }
+});
+//Ex7. 마우스 이벤트 객체 - 드래그 방식으로 박스 옮기기
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section7");
+    var container = section.querySelector(".container");
+    var box = section.querySelector(".box")
+    var offset = {x:0 , y:0}
+
+    var dragging = false;
+    container.onmousedown = function (e) {
+        if(e.target === box){
+            dragging = true;
+        }   
+        
+    };
+
+    container.onmousemove = function (e) {
+        if (!dragging) {
+            return;
+        }
+        box.style.left = e.pageX-offset.x + "px";
+        box.style.top = e.pageY-offset.y + "px";
+      
+       
+    };
+
+    container.onmouseup = function (e) {
+        dragging = false;  
+    };
+
+    box.onmousedown = function(e){
+        offset.x = e.offsetX;
+        offset.y = e.offsetY;
+    }
+});
+//Ex6. 마우스 이벤트 객체 마우스 좌표
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section6");
+    var container = section.querySelector(".container");
+    var box = section.querySelector(".box")
+
+    container.onclick = function (e) {
+        //e.x , e.y / e.offsetX, e.offsetY / e.clinetX, e.paseX...
+        console.log("(x,y):" + e.x + ",", e.y);
+        console.log("(client):" + e.clientX + ",", e.clientY);
+        console.log("(page):" + e.pageX + ",", e.pageY);
+        console.log("(offset):" + e.offsetX + ",", e.offsetY);
+        box.style.position = "absolute";
+        box.style.left = e.x + "px";
+        box.style.top = e.y + "px";
+       
+    };
+});
+//5. 이벤트 트리거
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section5");
+    var fileButton = section.querySelector(".file-button");
+    var fileTriggerButton = section.querySelector(".file-trigger-button")
+
+    fileTriggerButton.onclick = function () {
+        //클릭이벤트가 마우스 이벤크임.
+        var event = new MouseEvent("click", {
+            //뷰는 뭘로 할건지
+            'view' : window,
+            //버블링이가능한지 
+            'bubbles' : true,
+            //버블링캔슬이 가능한지
+            'cancelable' : true
+        });
+        
+        fileButton.dispatchEvent(event);
+       
+       
+    };
+});
 //4. 엘리먼트 노드의 기본행위 막기
 window.addEventListener("load", function () {
     var section = document.querySelector("#section4");

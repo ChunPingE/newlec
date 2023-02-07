@@ -1,0 +1,185 @@
+46. 이벤트 트리거
+트리거 방아쇠? 
+버튼이 있는데사용자가 누르는게 아니라 클릭을 발생시키기.
+그런데 어느 경우에 쓰나
+불편한 문제 컨트롤 중에 스타일이 적용되지 않는 컴포넌트
+파일선택 넣는 모양 맘에 안듬. 원하는 모양으로 넣고싶은데 어렵다.
+기능만 부여하고 보여주는걸 다르게 보여준다.
+파일선택상자인줄 알고 누르게하면 트리거로 파일선택을 누르게 해준다.
+
+.gallery-file{
+    display:none;
+}
+
+발생하지 않는 이벤트를 유발시키는 것임.
+
+<style>
+    .file-button{
+        display:none;
+    }
+    .file-trigger-button{
+        background-color: green;
+        border: 1px solid lightgreen;
+        border-radius: 5px;
+        padding: 5px 10px;
+        color:  white;
+        cursor:pointer;
+    }
+    .file-trigger-button:hover{
+        background-color: lime;
+    }
+</style>
+<h1>5. 이벤트 트리거</h1>
+<input type="file" class="file-button">
+<span class="file-trigger-button">파일선택</span>
+
+일단 ui만 만들자. 파일 선택 창은 숨기고 트리거로 그것을 건들이기 위한 다른 버튼을 만들었다.
+
+window.addEventListener("load", function () {
+    var section = document.querySelector("#section5");
+    var fileButton = section.querySelector(".file-button");
+    var fileTriggerButton = section.querySelector(".file-trigger-button")
+
+    fileTriggerButton.onclick = function () {
+        //클릭이벤트가 마우스 이벤크임.
+        var event = new MouseEvent("click", {
+            //뷰는 뭘로 할건지
+            'view' : window,
+            //버블링이가능한지 
+            'bubbles' : true,
+            //버블링캔슬이 가능한지
+            'cancelable' : true
+        });
+        
+        fileButton.dispatchEvent(event);
+    };
+});
+이벤트를 발생시킨다 마우스로 클릭하는 이벤트를 발생시키는거임.
+그리고 이 이벤트를 dispatchEvent을 이용해서 fileButton에 전달해주는 것이다.
+IE에서는 작동안한다. 하위버전에서 작동하게 하기 위해서는 밑에처럼 작성해줘야한다.
+var event = document.craetEvent("MouseEvent");
+evetn.initEvent("click", true, true) //event type, bubbles, cancelable
+그런데 이제 IE는 지원안하기 때문에 거의 안사용할 듯하다.
+
+48.  클릭 위치에 박스 옮기기
+이벤트라는 객체는 하나가 아니라 이벤트에 따라서 여러개이다.
+특화된 이벤트 객체중 특화되는 것을 사용해보자.
+박스안에 박스가 잇는데 이벤트가 발생한다.
+<div class="container">
+    <div class="box"></div>
+</div>
+일단 박스를 만들었다.
+좌표를 얻기위해 e.x , e.y / e.offsetX, e.offsetY / e.clinetX, e.paseX...등등이잇다.
+
+container.onclick = function (e) {
+        console.log("(x,y):" + e.x + ",", e.y);
+        box.style.left = e.x;
+        box.style.top = e.y;
+};
+하면 클릭한 위치의 x와 y값이 얻어진다.
+움직이지 않는데
+1.박스가 움직이려면 position이 static이면 안된다.
+2.위치하는 레프트 값이 100px등 단위가 있어야한다.
+container.onclick = function (e) {
+    //e.x , e.y / e.offsetX, e.offsetY / e.clinetX, e.paseX...
+    console.log("(x,y):" + e.x + ",", e.y);
+    box.style.position = "absolute";
+    box.style.left = e.x + "px";
+    box.style.top = e.y + "px";
+};
+
+그런데 이거도 이상하다 스크롤바가 있으면 붕뜬위치에 옮겨진다.
+다음강의에서 마우스포인터에 맞게끔 하기 위한 종류를 알아보자.
+
+49. 마우스 이벤트 좌표 3가지 구분하기
+x,y가 페이지 기반 x,y clinet기반 offset기반이 있음을 알아야한다.
+클라이언트 영역
+clinetX / clinetY
+브라우저가 있으면 화면에 보여지는 영역이 있고 문서는 화면보다 더 클수도 있다.
+화면에서 보여주는 것을 기준으로 좌상단이 clinet영역이다.
+페이지 영역이란 페이지 를 기반으로 좌표를 찍는것이다.
+
+옵셋 영역은 클라이언트 영역안에 상자를 클릭하면 그영역을 원점으로 하는게 옴셋영역이다.
+
+그냥 e.x e.y는 클라이언트 영역을 기반으로 하는 것이다.
+
+50. 드래그 방식으로 박스 옮기기 
+이번에는 드래그로 움직이게 할것이다.
+container.onmousemove = function (e) {
+    box.style.left = e.pageX + "px";
+    box.style.top = e.pageY + "px";
+};
+
+onmousemove 하면마우스 움직일때마다 함수가 실행된다.
+
+그런데 무조건따라오는데 이게 아니라 '드래그' 하는 동안 움직여야한다. 드래그가 아닐때는 가만히 잇어야한다.
+var dragging = false;
+container.onmousedown = function (e) {
+    dragging = true; 
+};
+container.onmouseup = function (e) {
+    dragging = false;  
+};
+mousedown 마우스가 눌렷을때 dragging을 true로해주고 떼면 false로 해줘서 드래그 상태임을 표시해주자!
+if (!dragging) {
+        return;
+}
+
+박스에서 마우스가 클릭된 offset만큼 이동해야한다.
+var offset = {x:0 , y:0}
+box.onmousedown = function(e){
+    offset.x = e.offsetX;
+    offset.y = e.offsetY;
+}
+e.pageY-offset.y해주면 클릭한 위치에 박스가 따라왓다면 클릭한위치에서 빼줘서 보정하면 클릭한위치가 선택될것이다
+
+51. 여러 개의 박스 드래그하기
+박스를 옮겨봣는데 박스가 여러개일 경우는 어떻게 해야할까? 지난시간에 한건 하나밖에 못옮긴다.
+검색되는게 제일 밑에 있는 박스로 돌아가는데 클릭되는건 맨위 박스가 클릭되서 안움직여진다
+
+var current = null; 현재박스를 알기 위해서 변수를 선언해준다.
+어떤 박스를 클릭한지 알기 위해서 버블링되니까 container에 작성해준다.
+container.onmousedown = function (e) {
+    if(e.target.classList.contains("box")){
+        dragging = true;
+        current = e.target;
+        offset.x = e.offsetX;
+        offset.y = e.offsetY;
+    }   
+};
+선택된게 box라는 클래스명을 가지고 있느지 확인하고 현재 선택된걸 타겟으로 만든다.
+offset도 현재 선택된애의 offset을 얻어야하니 여기서 작성해준다.
+
+52. 박스의 옵셋 좌표 이용하기
+이전 예제들의 실제를 보면 박스를 다룰대 문제가 잇긴하다.
+시각적으론 문제가 없지만 좌표에 문제가 있다.
+
+만약 드래그한다면 페이지 전체 좌표를 기준으로 한다는 것은 바람직하지 않다.
+박스 컨테이너를 기준으로 하면 페이지가 어떻게 바뀌든 상관이없다.
+var x = e.offsetX-offset.x
+var y = e.offsetY-offset.y
+
+근데 offset좌표로 기반으로해서 이동하게 되서 container를 position : relative;로 해줘야 안에서 움직인다
+그런데 움직이면깜빡거린다 이유는 드래그할대 이벤트가 두번이 발생한다. 박스와 컨테이너의 offset좌표를 얻기때문임.
+버블링되면서 컨테이너의 0도 전달이된다.
+그냥 페이지 좌표를 쓰고 현재컨테이너의 x,y좌표를 빼줘서 그 안에 잇도록해준다.
+var left = container.offsetLeft;
+var top = container.offsetTop;
+
+var x = e.pageX-offset.x - left;
+var y = e.pageY-offset.y - top;
+
+컨테이너가 relative형태여야 안쪽에 absolute들이 이 위치안에서 좌표를 설정한다.
+페이지 기반으로 하지만 컨테이너위치를빼줘야 위치가 정해진다.
+
+53. Mouse Event Capturing
+
+
+
+
+
+
+
+
+
+
