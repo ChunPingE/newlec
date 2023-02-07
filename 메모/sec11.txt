@@ -94,7 +94,79 @@ var img1 = document.querySelector("#img1");
 jquery를 사용하면 dom객체를 가져오는 식조차 필요없어진다.
 $("#img1").attr("src", "images/img1.jpg")
 
-----------ec6차이
+var txtX = document.getElementById("txt-x");
+var txtY = document.getElementById("txt-y");
+var btnAdd = document.getElementById("btn-add");
+var txtSum = document.getElementById("txt-sum");
+
+btnAdd.onclick = function(){
+    var x = parseInt(txtX.value);
+    var y = parseInt(txtY.value);
+    txtSum.value = x+y;
+}
+--> jquery사용해서 줄여보았다.
+$("#btn-add").click(function(){
+    var x = parseInt($("#txt-x").val());
+    var y = parseInt($("#txt-y").val());
+    $("#txt-sum").attr("value", x + y);
+});
+
+----------es6차이
+01. ec6 학습 개요
+6.0 에서 많은 것들이 바뀌었다.
+15년버전부터는 굉장히 많은게 추가 되었다.
+7,8,9도 있지만 자바스크립트 es6이 왜 중요한가? 분기점이다. 기존 javascript는 어플리케이션을 만드는 것이 아니엇다.
+모호하고 유연해서 버그가 많이 발생할 수 있었다. 굉장히 많은 문제점을 어플리케이션을 만들 수 있도록 변화했다.
+나머지는 비슷하기때문에 이것을 기준으로 일단 공부하면 이해하기 쉬울 듯 하다.
+지원률 98%넘엇다.
+
+2. let 키워드 #1:변수 선언이 무의미한 문제
+기존에 변수선언시 x = 30; window객체 속성으로 값을 넣은 거였다.
+var x = 30; 해도 지역변수가 아니다.
+
+나만의공간 지역내의 공간에서 사용할 수 있게 변수가 추가 되었다.
+let x = 30; 전역속성에 들어가지 않고 자기만의 공간을 가지게 된다.
+자바스크립트는 원래 변수를 중복해서 선언해도 문제가 없었다. 
+let으로 바꾸면 또 선언하고자 하면 에러가 발생한다. 실수를 덜할수 있는 환경이 만들어진것이다.
+별것 아닌데 이게 이제서야 된것임.
+
+var x = 30;하면 무조건 window에 속성으로 붙은것임
+console.log(window.x);
+
+let x = 30;하면 지역변수가 된다
+console.log(x);해야 출력할 수있다.
+
+다시 
+let x = 20; 하면 에러가 난다.
+
+이제 선택적으로 var와 let을 쓰나? 그러면 안된다. 이제 var은 쓰지 말아야한다.
+
+3. - let 키워드 #2: 이젠 지역변수가 생겼다.
+var같은걸쓰면 함수를 통하지 않으면 지역화가 불가능하다.
+다른 언어와 같은경우 {var x}하면 이 지역안에서만 사용이 가능했다.
+하지만 자바스크립트는 블럭밖에서 사용하더라도 중괄호가 아무 의미 없는 것이었다.
+
+전역적인 변수 충돌을 막기 위해{let x}을 하면 지역변수화 되어서 꺼내서 사용하지 못한다.
+
+function getValue(c){
+    if(c){
+        var value = "blue";
+        return value;
+    } else {
+        return value;
+    }
+}
+과거에는 이런식으로 작성햇을때 원래대로라면 전체에서 사용하기 위해 value변수를 빼서 작성해야햇지만
+아무의미가 없었다. 오류가 나지 않고 value이 값이 선언되있다고 나온다.
+이제서야 let을 사용하면 가시영역을 벗어나면 값이 안된다.
+{
+    let a
+}
+console.log(a);
+이제 이렇게 하면 오류가 발생한다.
+let의 등장으로 지역화가 불가능했던 것을 해결하게 되었다.
+
+4.  const 키워드
 
 
 
@@ -105,4 +177,11 @@ $("#img1").attr("src", "images/img1.jpg")
 
 
 
+
+
+
+
+
+
+let var가 다른 점을 알게 되엇다.
 
