@@ -1,0 +1,143 @@
+4. const 키워드
+방향 코드 생성 방향을 위한 값을 숫자로 정의하기.
+동서남북 1234로 지정하고 var walkTo = 4;
+방향을 기호화한 것임.
+그런데 한달 두달 후에 고치려고 하는데 이 4가 어느방향인지 까먹음.
+숫자라는 것을 기호화 햇을 때 문자가 되는 것임. 이숫자를 더 잘표현하기 위해 변수로 했다.
+var N = 1;이런식으로 그런데 이 값이 다른걸로 대치 될수 있으니 문제가 발생할 수 있다.
+java에서의 final같은것음
+const N = 1; 하면 값을 바꿀수 없가하는 const이다.
+
+const print = function(){} 함수이름이 바뀌면 문제가 발생하니 함수를 const로 선언하면 바뀔일이 없다.
+
+var add = function(){} 햇엇는데 다른 누군가가 add = 3;하면 함수가 없어져버림
+const를 하면 선언이 안된다. 다름사람이 내것을 바꾸는 것을 막을 수 잇다.
+
+5. Template String
+지금까지 문자열을 담을때 let template = ""에 담앗다.
+``는 어금보 내려쓰기하든 공백을 하든 상관이없다.
+기존의 문자열도 꽃아넣는것도 쉽다. 
+문자열안에 변수를 꽃고싶다면 `${title}` 하면된다.
+
+let template = " <section> \
+            <h1></h1> \
+            <p></p> \
+            </section> \
+            ";
+html을 동적으로 넣기위해 과거에는 내려쓰기를 포함하려면 공백도 없애고 \을 사용해야햇엇다.
+
+let title  = "ES6";
+    let content = "새로운 문자열"
+    let template = `<section>
+        <h1>${title}</h1>
+        <p>${content}</p>
+    </section>
+    `;       
+
+console.log(template);
+다중라인도 쉽게 표현하고 중간에 변수명도 쉽게 넣을수 있게 되었다.
+만약 이스케이프 문자도 포함해서 그냥 출력하고싶다.?
+String.raw(`\n\n\n`)
+
+6. 향상된 JSON 객체 표현식 #1
+객체를 생성할때 다음과 같이 햇엇다.
+let kor = 30; let eng = 40; let math = 50;
+var exam = {kor:kor, eng:eng, math:math}
+만약 변수로 객체를 만들때 변수이름과 컬럼을 같게 하는 경우가 많다.
+이런것을 var exam = {kor, eng, math}로 만들수 있게 되었다. 변수나열만해도 알아서 속성이 따라간다.
+
+어떤 개체를 만드느 함수가 잇을때
+function createExam(kor, eng, math){
+    return{kor,eng,math}
+}
+var exam = createExam(10,20,30);
+하기만해도 각각 매핑되서 객체를 만들기 쉬워졋다.
+
+객체를 생성할때 function이라는 키워드를 제거해도
+return{kor:kor, eng:eng, totla:function(){}} -> return{kor,eng,total(){}}만 해도되게 되었다.
+
+let kor = 30; 
+let eng = 40; 
+let math = 50;
+
+let exam = {kor, eng, math, total(){return 10;}};
+
+console.log(exam.kor);
+console.log(exam.total());
+
+json으로 객체를 표현할때 키와 값으로 햇어야햇는데 값만 나열해도 되게 되엇다.
+
+7. 향상된 JSON 객체 표현식 #2 : 변수형 속성
+json에서 키값으로 -가 사용되어야하면 ""로 묶어젔다.
+이런 String을 let 변수에 담아서 속성으로 사용한다면? 오류가 발생한다.
+let style= {
+    "backgroud-color":"red"
+};
+->
+let cssAttr = "backgroud-color"
+-?
+let style= {
+    cssAttr:"red"
+};
+->오류 그런데 이게 가능해짐
+let style= {
+    [cssAttr]:"red"
+};
+[]안에 변수를 담으면 변수의 키값으로 담을 수 있게 되었다. 심지어는 연산자도 가능하다.
+이게 필요할까? 다음에 배울 symbol을 통해 사용되는 것 같다.자주 사용은 안하고 필요하면 쓰고 남용은 하지말자.
+
+let attr = "kor";
+let exam = {
+    [attr]:10
+};
+
+console.log(exam.kor); // 10
+
+이걸 억지로 쓰는건 무리가 있다. 필요할때 사용해봐라
+
+8.  Object Destructuring #1 
+객체 뽀개기??
+구조적인 데이터를 사용할때 데이터를 그룹화해서 사용하는 경우가 있다.
+function printExam(exam){
+    let total = exam.kor + exam.eng + exam.math;
+    console.log(`kor:${exam.kor}, eng:${exam.eng}, math:${exam.math});
+    console.log(${total})
+}
+
+function printExam(exam){
+    let kor = exam.kor;
+    let eng = exam.eng;
+    let math =  exam.math;
+    let total = kor + eng +m ath;
+    console.log(`kor:${kor}, eng:${eng}, math:${math});
+    console.log(${total})
+}
+위는 구조를 사용하는 연산자를 직접 사용하고 밑에는 지역변수화해서 사용한다.
+밑에거 객체 속성들을 값을 옮겨담는거 Destructuring이라고 한다.
++만 연산이 아니라 exam.kor자체도 연산이다.연산수가 위에가 더 많아서 더 비효율적이게 된다.
+javascript ES6에선 이것을 도와준다.
+exam이 속성을 kor eng를 가지고 있다면 let {kor, eng} = exam; 하면 알아서 쪼개준다.
+function exam(exam) {
+    let {kor, eng} = exam;
+    console.log(`kor:${kor}, eng:${eng}`);
+}
+
+function exam({kor, eng}) {
+
+    console.log(`kor:${kor}, eng:${eng}`);
+}
+심지어 속성만사용한다면 매개변수에 직접 넣어도 객체 쪼개기를 사용할 수 있다.
+
+9. Object Destructuring #2
+
+
+
+
+
+
+
+
+
+
+
+
