@@ -110,8 +110,32 @@ window.addEventListener("load", function() {
 
  
     //var currentNode = tbodyNode.children[0];
-    var currentNode = tbodyNode.firstElementChild;
+    //var currentNode = tbodyNode.firstElementChild;
+    let currentNode = $("#section8 tbody").children().eq(0);
 
+    $("#section8 .down-button").on("click", function(){
+        let nextNode = currentNode.next();
+      
+        if(nextNode == null){
+            alert("더이상 이동할 수 없습니다.");
+            return;
+        }
+        currentNode.insertAfter(nextNode);
+    });
+
+    $("#section8 .up-button").on("click", function(){
+        let prevNode = currentNode.prev();
+      
+        if(prevNode == null){
+            alert("더이상 이동할 수 없습니다.");
+            return;
+        }
+        currentNode.insertBefore(prevNode);
+    });
+
+
+
+    /*
     downButton.onclick = function(){
         var nextNode = currentNode.nextElementSibling;
         if(nextNode == null){
@@ -136,7 +160,7 @@ window.addEventListener("load", function() {
         //tbodyNode.insertBefore(currentNode, preNode);
         currentNode.insertAdjacentElement("afterend", preNode);
     };
-
+    */
     
 });
 //Ex7 : 노드 복제 및 템플릿(template) 복제
@@ -145,6 +169,7 @@ window.addEventListener("load", function() {
         {id:5, title:"파이야", regDate:"2023.02.03", writerId:"newlec", hit:0},
         {id:6, title:"추가할내용", regDate:"2023.02.03", writerId:"newlec", hit:17}
     ]
+
     var section = document.querySelector("#section7");
 
     var noticeList = section.querySelector(".notice-list");
@@ -152,7 +177,7 @@ window.addEventListener("load", function() {
     var templateButton = section.querySelector(".template-button");
 
     var tbodyNode = noticeList.querySelector("tbody");
-
+        /*
     cloneButton.onclick = function(){
         
         var trNode = noticeList.querySelector("tbody tr");
@@ -161,19 +186,39 @@ window.addEventListener("load", function() {
 
         var tds = cloneNode.querySelectorAll("td");
         tds[0].innerText = notices[0].id;
-        tds[1].innerHTML = '<a href="">' + notices[0].title; + '</a>'
+        tds[1].innerHTML = '<a href="">' + notices[0].title + '</a>'
 
 
         tds[2].textContent = notices[0].regDate;
         tds[3].textContent = notices[0].writerId;
         tds[4].textContent = notices[0].hit;
-        tbodyNode.append(cloneNode);
-       
+        tbodyNode.append(cloneNode);      
     };
-
+    */
+    $("#section7 .clone-button").click(function(){
+        let trNode = $("#section7 tbody").find("tr:eq(0)");
+        let cloneNode = trNode.clone(true);
+        cloneNode.find("td:eq(0)").text(notices[0].id);
+        cloneNode.find("td:eq(1)").html('<a href="">' + notices[0].title + '</a>');
+        cloneNode.find("td:eq(2)").text(notices[0].regDate);
+        cloneNode.find("td:eq(3)").text(notices[0].writerId);
+        cloneNode.find("td:eq(4)").text(notices[0].hit);
+        $("#section7 tbody").append(cloneNode);
+    });
+    
+    $("#section7 .template-button").click(function(){ 
+        let trNode = $("#section7 template").find("tr:eq(0)");
+        let cloneNode = trNode.clone(true);
+        cloneNode.find("td:eq(0)").text(notices[0].id);
+        cloneNode.find("td:eq(1)").html('<a href="">' + notices[0].title + '</a>');
+        cloneNode.find("td:eq(2)").text(notices[0].regDate);
+        cloneNode.find("td:eq(3)").text(notices[0].writerId);
+        cloneNode.find("td:eq(4)").text(notices[0].hit);
+        $("#section7 tbody").append(cloneNode);
+    });
+    /*
     templateButton.onclick = function(){
-        
-        
+     
         for (var i = 0; i < notices.length; i++){
             var template = section.querySelector("template");
             var cloneNode = document.importNode(template.content, true);
@@ -191,9 +236,12 @@ window.addEventListener("load", function() {
     
             tbodyNode.append(cloneNode);
         }
-        
-   
     };
+      */
+
+
+
+
 });
 //Ex6-2 : 노드조작 : 메뉴 추가
 window.addEventListener("load", function() {
@@ -245,6 +293,7 @@ window.addEventListener("load", function() {
 });
 //Ex6 : 노드조작 : 메뉴 추가
 window.addEventListener("load", function() {
+    /*
     var section = document.querySelector("#section6");
 
     var titleInput = section.querySelector(".title-input");
@@ -252,6 +301,7 @@ window.addEventListener("load", function() {
     var addButton = section.querySelector(".add-button");
     var delButton = section.querySelector(".del-button");
 
+   
     addButton.onclick = function(){
         var title = titleInput.value;
         var txtNode = document.createTextNode(title);
@@ -263,10 +313,26 @@ window.addEventListener("load", function() {
         var txtNode = menuListDiv.childNodes[0];
         menuListDiv.removeChild(txtNode);
     };
+    */
+
+   $("#section6 .add-button").click(function(){
+        let title = $("#section6 .title-input").val();
+        $("#section6 .menu-list").append(title);
+   });
+
+   /*
+   $("#section6 .del-button").click(function(){
+        let txtNode = $("#section6 .menu-list").text();
+        txtNode = "";
+    });
+    */
+
+  
 });
 
 //Ex5-2 : 엘리먼트 노드 & CSS 속성변경
 window.addEventListener("load", function() {
+    /*
     var section = document.querySelector("#section5_2");
     // var srcInput = section.querySelector(".src-input");
     var imgSelect = section.querySelector(".img-select");
@@ -283,10 +349,18 @@ window.addEventListener("load", function() {
         //console.log(img.className);
        
     };
+    */
+    $("#section5-2 .change-button").click(function() {
+        $("#section5-2 .img").attr("src", "images/" + $("#section5-2 .img-select option:selected").val());
+        $("#section5-2 .img").css("border-color", $(".color-input").val());
+    });
+
 });
 
 //Ex5 : 엘리먼트 노드의 속성변경
 window.addEventListener("load", function() {
+  
+    /*
     var section = document.querySelector("#section5");
     // var srcInput = section.querySelector(".src-input");
     var imgSelct = section.querySelector(".img-select");
@@ -297,20 +371,37 @@ window.addEventListener("load", function() {
         //img.src = "images/" + srcInput.value;
         img.src = "images/" + imgSelct.value;
     };
+    */
+    
+    $("#section5 .change-button").click(function(){
+        //console.log($("#section5 .img-select option:selected").val());
+        $("#section5 .img").attr("src", "images/" + $("#section5 .img-select option:selected").val());
+        
+    });
+    
+    
+ 
+
 });
 
 //Ex4 : chlidNodes를 이용한 노드 선택
 window.addEventListener("load", function() {
-    var section4 = document.querySelector("#section4");
+    //var section4 = document.querySelector("#section4");
     //var inputs = section4.querySelectorAll("input");
-    var box = section4.querySelector(".box");
+    // var box = section4.querySelector(".box");
 
-    var input1 = box.children[0]
-    var input2 = box.children[1]
+    // var input1 = box.children[0]
+    // var input2 = box.children[1]
 
-    input1.value = "hello";
-    input2.value = "okay";
-    
+    // input1.value = "hello";
+    // input2.value = "okay";
+
+    let input1 = $("#section4 > .box").children().eq(0);
+    let input2 = $("#section4 > .box").children().eq(1);
+
+    input1.attr("value", "hello");
+    input2.attr("value", "okay");
+
 });
 
 //Ex3 : Selectors API level 1
@@ -328,8 +419,8 @@ window.addEventListener("load", function() {
     //     txtSum.value = x+y;
     // }
     $("#section3 .btn-add").click(function(){
-        var x = parseInt($("#section3 input[name='x']").val());
-        var y = parseInt($("#section3 .txt-y").val());
+        let x = parseInt($("#section3 input[name='x']").val());
+        let y = parseInt($("#section3 .txt-y").val());
         $("#section3 .sum").attr("value", x + y);
     });
 
@@ -344,8 +435,8 @@ window.addEventListener("load", function() {
     // var txtSum  = section2.getElementsByClassName("txt-sum")[0];
     
     $("#section2 .btn-add").click(function(){
-        var x = parseInt($("#section2 .txt-x").val());
-        var y = parseInt($("#section2 .txt-y").val());
+        let x = parseInt($("#section2 .txt-x").val());
+        let y = parseInt($("#section2 .txt-y").val());
         $("#section2 .txt-sum").attr("value", xs + y);
     });
 
@@ -372,8 +463,8 @@ window.addEventListener("load", function() {
     // }
   
     $("#btn-add").click(function(){
-        var x = parseInt($("#txt-x").val());
-        var y = parseInt($("#txt-y").val());
+        let x = parseInt($("#txt-x").val());
+        let y = parseInt($("#txt-y").val());
         $("#txt-sum").attr("value", x + y);
     });
 
