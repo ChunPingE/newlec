@@ -111,7 +111,8 @@ window.addEventListener("load", function() {
  
     //var currentNode = tbodyNode.children[0];
     //var currentNode = tbodyNode.firstElementChild;
-    let currentNode = $("#section8 tbody").children().eq(0);
+    //let currentNode = $("#section8 tbody").children().eq(0);
+    let currentNode = $("#section8 tbody").find("tr").first();
 
     $("#section8 .down-button").on("click", function(){
         let nextNode = currentNode.next();
